@@ -1,15 +1,15 @@
 import NWer
 //  Created by Tanaka Hiroshi on 2024/10/01.
 import SwiftUI
-//import Defaults
 
 struct ContentView: View {
-//  @Default(.sels) var sels: [String] 
-  @State var sels: [String] = ["1301"]
+  @AppStorage("foo") var sels: String = "0000"
+//  @State var sels: [String] = ["1301"]
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   var body: some View {
     VStack(spacing: 0.0) {
-      ChartView3(selected: $sels[0])
+      ChartView3(selected: $sels)
+//      ChartView3(selected: $sels[0])
     }
     .padding(.all, 3)
   }
@@ -18,7 +18,7 @@ struct ContentView: View {
 /// - Description
 /// - Parameter selected: ticker code
 struct ChartView3: View {
-  @EnvironmentObject var appState: AppState  // 無視
+//  @EnvironmentObject var appState: AppState  // 無視
   @State var isShown: Bool = false
   @State var hoLoc: CGPoint = .zero
   @State var oldLoc: CGPoint = .zero
