@@ -8,10 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		87652C552CAB891E00942B11 /* NWer in Frameworks */ = {isa = PBXBuildFile; productRef = 87652C542CAB891E00942B11 /* NWer */; };
+		87652D072CAEB3E500942B11 /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 87652D062CAEB3E500942B11 /* Defaults */; };
+		87652D092CAEB40900942B11 /* Defaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87652D082CAEB40900942B11 /* Defaults+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		87652C3D2CAB87A900942B11 /* AltCP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AltCP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		87652D082CAEB40900942B11 /* Defaults+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -27,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87652D072CAEB3E500942B11 /* Defaults in Frameworks */,
 				87652C552CAB891E00942B11 /* NWer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,6 +41,7 @@
 		87652C342CAB87A900942B11 = {
 			isa = PBXGroup;
 			children = (
+				87652D082CAEB40900942B11 /* Defaults+.swift */,
 				87652C3F2CAB87A900942B11 /* AltCP */,
 				87652C3E2CAB87A900942B11 /* Products */,
 			);
@@ -71,6 +76,7 @@
 			name = AltCP;
 			packageProductDependencies = (
 				87652C542CAB891E00942B11 /* NWer */,
+				87652D062CAEB3E500942B11 /* Defaults */,
 			);
 			productName = AltCP;
 			productReference = 87652C3D2CAB87A900942B11 /* AltCP.app */;
@@ -102,6 +108,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				87652C532CAB891E00942B11 /* XCRemoteSwiftPackageReference "NWer" */,
+				87652D052CAEB3E500942B11 /* XCRemoteSwiftPackageReference "Defaults" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 87652C3E2CAB87A900942B11 /* Products */;
@@ -128,6 +135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87652D092CAEB40900942B11 /* Defaults+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +346,14 @@
 				kind = branch;
 			};
 		};
+		87652D052CAEB3E500942B11 /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -345,6 +361,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 87652C532CAB891E00942B11 /* XCRemoteSwiftPackageReference "NWer" */;
 			productName = NWer;
+		};
+		87652D062CAEB3E500942B11 /* Defaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 87652D052CAEB3E500942B11 /* XCRemoteSwiftPackageReference "Defaults" */;
+			productName = Defaults;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

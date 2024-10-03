@@ -1,9 +1,11 @@
 import NWer
 //  Created by Tanaka Hiroshi on 2024/10/01.
 import SwiftUI
+import Defaults
 
 struct ContentView: View {
-  @State var sels: [String] = ["1301"]
+  @Default(.sels) var sels//: [String] 
+//  @State var sels: [String] = ["1301"]
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   var body: some View {
     VStack(spacing: 0.0) {

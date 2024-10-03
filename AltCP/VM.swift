@@ -17,7 +17,8 @@ public typealias xtick = (date: Date?, norm: Int, st: Bool)
 //@MainActor
 public class VM: ObservableObject {
   @Published public var ar: [candle] = []
-  @Published public var ticker: String = "1301"
+  @Published public var ticker: String = ""
+//  @Published public var ticker: String = "1301"
   {
     didSet {
       print("--- didSet ---")
