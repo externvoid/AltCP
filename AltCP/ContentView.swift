@@ -22,14 +22,13 @@ struct ChartView3: View {
   @State var isShown: Bool = false
   @State var hoLoc: CGPoint = .zero
   @State var oldLoc: CGPoint = .zero
-  //  lazy var c: VM = .init(ticker: selected) // @StateObject
-  @State var c: VM = .init()  //ar: []) // @StateObject
-  //  @State var c: VM = .init(ar: VM.dummy) // @StateObject
-  //  @Binding var c: VM //= .init(ar: VM.dummy) // @StateObject
+
+  @StateObject var c: VM = .init()  //ar: []) // @StateObject
+  @Binding var selected: String
+  //  @Binding var c: VM //= .init(ar: VM.dummy)
   @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
-  @Binding var selected: String
   @State var isLoading: Bool = false
   var allItems: [String] {  // code, company, category
     codes.map { e in e[0] + ": " + e[1] + ": " + e[2] }
@@ -42,64 +41,49 @@ struct ChartView3: View {
   var body: some View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
-      //      let _ = print("fsize: \(fsize)")
-      //      let hsize: CGSize = .init(width: fsize.width, height: fsize.height / 2)
-      ZStack(alignment: .bottomTrailing) {
-        //        VStack(spacing: 0.0) {
-        body0(fsize: fsize)  //, hoLoc: $hoLoc)
-//        btn
-//          .padding([.bottom, .trailing], 3)
+      if !c.ar.isEmpty {
+        plot(fsize: fsize)  //, hoLoc: $hoLoc)
       }
-      //      .onChange(of: selected) {
-      //        c.ticker = selected
-      //        print("onChange")
-      //      }
-      .onChange(of: c.ticker) {
-        print("onChange")
-        isLoading = true
-        Task {
-//          Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-//          }
-//          try! await Task.sleep(for: .seconds(0.1))
-          c.ar = try! await Networker.queryHist(
-            c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-          isLoading = false
-        }
-      }
-      .onAppear {
-        print("onAppear")
-        c.ticker = selected
-        isLoading = true
-        Task {
-          c.ar = try! await Networker.queryHist(
-            c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-          isLoading = false
-        }
-      }
-      .task {
-        if codes.isEmpty {
-          codes = try! await Networker.queryCodeTbl(
-            DBPath.dbPath(1),
-            DBPath.dbPath(2))
-        }
-      }
-      //      body0(geometry: geometry)
-      //        .border(.yellow.opacity(0.3), width: 1)
     }  // geo
+    .onChange(of: c.ticker) {
+      print("onChange")
+      isLoading = true
+      Task {
+        c.ar = try! await Networker.queryHist(
+          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+        isLoading = false
+//        plot(fsize: fsize)  //, hoLoc: $hoLoc)
+      }
+      UserDefaults.standard.set(c.ticker, forKey: "foo")
+    }
+    .onAppear {
+      print("onAppear@GeometryReader")
+      c.ticker = selected
+      isLoading = true
+      Task {
+        c.ar = try! await Networker.queryHist(
+          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+        isLoading = false
+      }
+    }
+    .task {
+      print("task")
+      if codes.isEmpty {
+        codes = try! await Networker.queryCodeTbl(
+          DBPath.dbPath(1),
+          DBPath.dbPath(2))
+      }
+    }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
-    //    .cornerRadius(5)
-    //    .border(.yellow.opacity(0.3), width: 1)
-    //        .padding(.all, 10)
-    //    .background(Color.white.opacity(0.3))
   }  // body
 }  // View
-// MARK: body0
 extension ChartView3 {
   @ViewBuilder
-  func body0(fsize: CGSize) -> some View {
-    //    let hsize: CGSize = .init(width: fsize.width, height: fsize.height / 2)
+  // MARK: plot
+  func plot(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
+//      let _ = print("plot@Geometry")
       CursorLine(hoLoc: hoLoc)
         .stroke(Color.red.opacity(0.3), lineWidth: 1)
         .frame(width: fsize.width)
@@ -107,16 +91,9 @@ extension ChartView3 {
       dateOHLCV(fsize: fsize)
       btn
         .padding([.bottom, .trailing], 3)
-
-      //        .frame(alignment: .topLeading)
-      //              .frame(width: geometry.size.width)
-      //              .background { Rectangle().fill(.clear) }
     }  //   Z
     .modifier(OnHover(hoLoc: $hoLoc, oldLoc: $oldLoc, fsize: fsize))
-    //    .overlay {
-    //    }
-    //      .background { Rectangle().fill(.red) }
-  }  // body0
+  }  // plot
   /// - Description
   @ViewBuilder
   ///
