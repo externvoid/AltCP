@@ -46,32 +46,25 @@ struct ChartView3: View {
       }
     }  // geo
     .onChange(of: c.ticker) {
-      print("onChange")
-      isLoading = true
+      print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
       Task {
         c.ar = try! await Networker.queryHist(
           c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-        isLoading = false
-//        plot(fsize: fsize)  //, hoLoc: $hoLoc)
+        print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
       }
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
-      print("onAppear@GeometryReader")
+      print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       c.ticker = selected
-      isLoading = true
-      Task {
-        c.ar = try! await Networker.queryHist(
-          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-        isLoading = false
-      }
     }
     .task {
-      print("task")
+      print("task: \(codes.count)")
       if codes.isEmpty {
         codes = try! await Networker.queryCodeTbl(
           DBPath.dbPath(1),
           DBPath.dbPath(2))
+        print("task: \(codes.count)")
       }
     }
     .background(

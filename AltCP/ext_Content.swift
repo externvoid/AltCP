@@ -146,5 +146,4 @@ extension ChartView3 {
     ctx.fill(pf.applying(mt0).applying(mtx), with: .color(.blue))
     ctx.stroke(ps.applying(mt0).applying(mtx), with: .color(.blue))
   }
-
 }
