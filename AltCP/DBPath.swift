@@ -8,8 +8,11 @@
 
 enum DBPath {
   static func dbPath(_ num: Int) -> String {
-    let dbBase = "/Volumes/twsmb/newya/asset/"
-//        let dbBase = "/Volumes/home/NASData/StockDB/"
+//    let dbBase = "~/Library/Application Support/ChartPlot/"
+    let dbBase = "/Users/tanaka/Library/Application Support/ChartPlot/"
+
+//    let dbBase = "/Volumes/twsmb/newya/asset/"
+//    let dbBase = "/Volumes/home/NASData/StockDB/"
 
     let dbPath0 = dbBase + "crawling.db"
     let dbPath1 = dbBase + "yatoday.db"
