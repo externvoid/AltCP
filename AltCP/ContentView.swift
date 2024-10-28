@@ -112,7 +112,8 @@ extension ChartView3 {
             ch = Double(String(format: "%.2f", ch))!
           }
           return
-            "d: \(d) v: \(v)\no: \(o) o: \(o) h: \(h) l: \(l)\nc: \(cl) ch: \(ch) %"  // fix wrong volume
+            "d: \(d) v: \(v) ch: \(ch) %\no: \(o) h: \(h) l: \(l) c: \(cl)"
+          // fix wrong volume
         } else {
           return ""
         }
@@ -200,10 +201,10 @@ extension ChartView3 {
     .buttonStyle(PlainButtonStyle())
     .popover(isPresented: $isShown) {
       ZStack {
-        Color.gray
+//        Color.white.opacity(0.5)
         popUp
       }
-      .frame(width: 200, height: 300)
+      .frame(width: 300, height: 300)
     }
   }  // btn
   @ViewBuilder
@@ -213,7 +214,7 @@ extension ChartView3 {
       ScrollViewReader { proxy in
 
         ScrollView {
-          LazyVStack {
+          LazyVStack(spacing:0) {
             //            ForEach(0..<1000, id: \.self) { number in
             ForEach(0..<items.count, id: \.self) { number in
               Button(action: {
@@ -226,17 +227,21 @@ extension ChartView3 {
                 isShown = false
                 //                isLoading = true
               }) {
-                ZStack {
-                  // ZStack(alignment: .leading) {
-                  //                Circle()
-                  //                  .stroke(Color.white, style: StrokeStyle(lineWidth: 3))
-                  //                Text(number.formatted())
-                  //                  Text(codes[number][0] + codes[number][1])
+//                VStack(spacing:0) {
                   Text(items[number])
-                    .frame(width: 160, height: 20, alignment: .leading)
-                  //                  .frame(width: 200, height: 20, alignment: .leading)
-                }  //.frame(width: 200, height: 20, alignment: .leading)
+                  .fontDesign(.monospaced)
+                    .frame(width: 260, height: 20, alignment: .topLeading)
+                    .lineLimit(1)
+//                    .allowsTightening(true)
+//                    .minimumScaleFactor(0.9)
+//                    .truncationMode(.tail)
+//                    .padding(.leading, 10)
+                    .foregroundColor(.blue)
+//                    .frame(alignment: .leading)
+//                } //.frame(width: 200, height: 20, alignment: .leading)
               }
+//              .buttonStyle(PlainButtonStyle())
+              .background(Color.black.opacity(0.7))
               .id(number)
             }  // For
             .scrollTargetLayout()  // report current pos.
@@ -251,7 +256,8 @@ extension ChartView3 {
     .padding()
   }  // popUp
   // MARK: textBox in popUp
-  func textBox(txt: Binding<String>) -> some View {
+//  func textBox() -> some View { // arg txtは必要?
+    func textBox(txt: Binding<String>) -> some View {
     HStack {
       Spacer()
       TextField("code or name", text: txt).font(.title3)
@@ -265,6 +271,10 @@ extension ChartView3 {
       }
     }
   }
+
+  /// obtain the array of the detailed code related info
+  /// - Parameter code
+  /// - Returns: [code, name, market, capital, feat, category]
   func findInfo(_ code: String) -> [String] {
     if let info = codes.first(where: { e in e[0] == code }) {
       return info//Array(info[0..<4])
@@ -273,6 +283,23 @@ extension ChartView3 {
       return info
     }
   }
+  func findNext(_ code: String) -> [String] {
+    for i in codes.indices {
+      if codes[i][0] == code {
+        if i <= codes.count - 2 {
+          return codes[i+1]
+        } else {
+          return codes[0]
+        }
+      }
+    }
+    return []
+//    fatalError("fatal in findNext")
+  }
+
+  /// <#Description#>
+  /// - Parameter scPos: <#scPos description#>
+  /// - Returns: <#description#>
   func codeInfo(_ scPos: Int?) -> String {
     if scPos != nil && codes.isEmpty == false {
       print(scPos!)
@@ -287,7 +314,8 @@ extension ChartView3 {
 #Preview {
   ContentView()
     .navigationTitle("ooPs")
-    .frame(width: 320, height: 350)
+    .frame(width: 520, height: 300)
+//    .frame(width: 200, height: 200)
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)
     .environmentObject(AppState())
