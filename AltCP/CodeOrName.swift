@@ -52,7 +52,8 @@ extension ChartView3 {
 #Preview {
   @Previewable @State var sels: String = "0000"
   VStack(spacing: 0.0) {
-    ChartView3(selected: $sels)
+    ChartView3(selected: sels)
+      .frame(width: 400 , height: 260)
     //      ChartView3(selected: $sels[0])
   }
   .padding(.all, 3)

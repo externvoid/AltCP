@@ -14,18 +14,17 @@ public typealias xtick = (date: Date?, norm: Int, st: Bool)
 // FIXME: conflicting code vs ticker
 
 // MARK: VM
-//@MainActor
+@MainActor
 public class VM: ObservableObject {
   @Published public var ar: [candle] = []
   @Published public var ticker: String = ""
-//  @Published public var ticker: String = "1301"
   {
     didSet {
-      print("--- didSet ---")
-//      Task {
-//        ar = try! await Networker.queryHist(
-//          ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-//      }
+      print("--- didSet ticker: \(ticker)---")
+      Task {
+        ar = try! await Networker.queryHist(
+          ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+      }
     }
   }
   public init(ar: [candle] = dummy, ticker: String = "0000") {
@@ -36,18 +35,10 @@ public class VM: ObservableObject {
 
   public init() {
     print("--- init() ---")
-    //    Task {
-    //      ar = try! await Networker.fetchHist(ticker)
-    //    }
-    //    bind()
   }
   public init(ticker: String) {
     self.ticker = ticker
-    print("--- init(ticker:) ---")
-//    Task {
-//      ar = try! await Networker.queryHist(
-//        ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-//    }
+    print("--- init(ticker:)@VM ticker: \(ticker) ---")
   }
 
   public var max: Double {

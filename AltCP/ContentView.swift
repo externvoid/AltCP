@@ -8,7 +8,7 @@ struct ContentView: View {
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   var body: some View {
     VStack(spacing: 0.0) {
-      ChartView3(selected: $sels)
+      ChartView3(selected: sels)
 //      ChartView3(selected: $sels[0])
     }
     .padding(.all, 3)
@@ -24,7 +24,10 @@ struct ChartView3: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM = .init()  //ar: []) // @StateObject
-  @Binding var selected: String
+   init(selected: String) {
+     _c = StateObject(wrappedValue: VM(ticker: selected))
+   }
+//  @Binding var selected: String
   //  @Binding var c: VM //= .init(ar: VM.dummy)
   @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
@@ -47,16 +50,11 @@ struct ChartView3: View {
     }  // geo
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-      Task {
-        c.ar = try! await Networker.queryHist(
-          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-        print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-      }
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
-      c.ticker = selected
+//      c.ticker = selected
     }
     .task {
       print("task: \(codes.count)")
@@ -66,6 +64,31 @@ struct ChartView3: View {
           DBPath.dbPath(2))
         print("task: \(codes.count)")
       }
+    }
+    .focusable()
+    .onKeyPress { press in
+      // 押されたキーが矢印キーかどうかを判定
+      let keyEquivalent = press.characters.first!
+      let pos = codes.binarySearch { $0[0] < c.ticker }
+      if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
+        print("right pressed")
+        if pos == codes.count - 1 {
+          c.ticker = codes.first!.first!
+        } else {
+          c.ticker = codes[pos + 1].first!
+        }
+        return .handled
+      } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
+        print("left pressed")
+        if pos == 0 {
+          c.ticker = codes.last!.first!
+        } else {
+          c.ticker = codes[pos - 1].first!
+        }
+        return .handled
+      }
+      print(press.characters)
+      return .handled
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
@@ -314,7 +337,7 @@ extension ChartView3 {
 #Preview {
   ContentView()
     .navigationTitle("ooPs")
-    .frame(width: 520, height: 300)
+    .frame(width: 400, height: 260)
 //    .frame(width: 200, height: 200)
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)
