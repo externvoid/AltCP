@@ -50,6 +50,10 @@ struct ChartView3: View {
     }  // geo
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
+//      Task {
+//        c.ar = try! await Networker.queryHist(
+//          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+//      }
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
@@ -65,38 +69,14 @@ struct ChartView3: View {
         print("task: \(codes.count)")
       }
     }
-    .focusable()
-    .onKeyPress { press in
-      // 押されたキーが矢印キーかどうかを判定
-      let keyEquivalent = press.characters.first!
-      let pos = codes.binarySearch { $0[0] < c.ticker }
-      if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
-        print("right pressed")
-        if pos == codes.count - 1 {
-          c.ticker = codes.first!.first!
-        } else {
-          c.ticker = codes[pos + 1].first!
-        }
-        return .handled
-      } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
-        print("left pressed")
-        if pos == 0 {
-          c.ticker = codes.last!.first!
-        } else {
-          c.ticker = codes[pos - 1].first!
-        }
-        return .handled
-      }
-      print(press.characters)
-      return .handled
-    }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
   }  // body
 }  // View
 extension ChartView3 {
-  @ViewBuilder
+//  @ViewBuilder
   // MARK: plot
+//  @MainActor
   func plot(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
 //      let _ = print("plot@Geometry")
@@ -104,6 +84,35 @@ extension ChartView3 {
         .stroke(Color.red.opacity(0.3), lineWidth: 1)
         .frame(width: fsize.width)
       chart(fsize: fsize)
+        .focusable()
+        .onKeyPress { press in
+          // 押されたキーが矢印キーかどうかを判定
+          let keyEquivalent = press.characters.first!
+          let pos = codes.binarySearch { $0[0] < c.ticker }
+          if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
+            print("right pressed")
+            Task {
+              if pos == codes.count - 1 {
+                c.ticker = codes.first!.first!
+              } else {
+                c.ticker = codes[pos + 1].first!
+              }
+            }
+            return .handled
+          } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
+            print("left pressed")
+            Task {
+              if pos == 0 {
+                c.ticker = codes.last!.first!
+              } else {
+                c.ticker = codes[pos - 1].first!
+              }
+            }
+            return .handled
+          }
+          print(press.characters)
+          return .handled
+        }
       dateOHLCV(fsize: fsize)
       btn
         .padding([.bottom, .trailing], 3)

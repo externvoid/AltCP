@@ -39,6 +39,11 @@ public class VM: ObservableObject {
   public init(ticker: String) {
     self.ticker = ticker
     print("--- init(ticker:)@VM ticker: \(ticker) ---")
+//    Task {
+//      ar = try! await Networker.queryHist(
+//        ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+//    }
+
   }
 
   public var max: Double {
