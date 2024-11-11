@@ -27,6 +27,7 @@ public class VM: ObservableObject {
       }
     }
   }
+#if DEBUG
   public init(ar: [candle] = dummy, ticker: String = "0000") {
     print("N225")
     self.ar = ar
@@ -36,6 +37,7 @@ public class VM: ObservableObject {
   public init() {
     print("--- init() ---")
   }
+#endif
   public init(ticker: String) {
     self.ticker = ticker
     print("--- init(ticker:)@VM ticker: \(ticker) ---")

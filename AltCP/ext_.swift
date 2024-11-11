@@ -37,6 +37,9 @@ extension Date {
     self = date
   }
 }
+// https://stackoverflow.com/questions/31904396/swift-binary-search-for-standard-array
+
+// Created 2024/11/10.
 
 extension RandomAccessCollection {
   /// Finds such index N that predicate is true for all elements up to

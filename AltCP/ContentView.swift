@@ -74,54 +74,22 @@ struct ChartView3: View {
   }  // body
 }  // View
 extension ChartView3 {
-//  @ViewBuilder
-  // MARK: plot
-//  @MainActor
+// MARK: plot
   func plot(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
-//      let _ = print("plot@Geometry")
       CursorLine(hoLoc: hoLoc)
         .stroke(Color.red.opacity(0.3), lineWidth: 1)
         .frame(width: fsize.width)
       chart(fsize: fsize)
-        .focusable()
-        .onKeyPress { press in
-          // 押されたキーが矢印キーかどうかを判定
-          let keyEquivalent = press.characters.first!
-          let pos = codes.binarySearch { $0[0] < c.ticker }
-          if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
-            print("right pressed")
-            Task {
-              if pos == codes.count - 1 {
-                c.ticker = codes.first!.first!
-              } else {
-                c.ticker = codes[pos + 1].first!
-              }
-            }
-            return .handled
-          } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
-            print("left pressed")
-            Task {
-              if pos == 0 {
-                c.ticker = codes.last!.first!
-              } else {
-                c.ticker = codes[pos - 1].first!
-              }
-            }
-            return .handled
-          }
-          print(press.characters)
-          return .handled
-        }
+        .modifier(OnKeyPress(c: c, codes: codes))
       dateOHLCV(fsize: fsize)
       btn
         .padding([.bottom, .trailing], 3)
     }  //   Z
     .modifier(OnHover(hoLoc: $hoLoc, oldLoc: $oldLoc, fsize: fsize))
   }  // plot
-  /// - Description
-  @ViewBuilder
-  ///
+// - Description
+// MARK: dateOHLCV
   func dateOHLCV(fsize: CGSize) -> some View {
     VStack(spacing: 0.0) {
       var i: Int {
@@ -168,11 +136,11 @@ extension ChartView3 {
   }  // dateOHLCV
 }
 
-// MARK: ViewModifier
+// MARK: ViewModifier 1
 struct OnHover: ViewModifier {
   @Binding var hoLoc: CGPoint  // = .zero
   @Binding var oldLoc: CGPoint  // = .zero
-  var fsize: CGSize
+  let fsize: CGSize
   func body(content: Content) -> some View {
     content.onContinuousHover { isHovered in
       switch isHovered {
@@ -190,6 +158,45 @@ struct OnHover: ViewModifier {
     }
   }
 }
+// MARK: ViewModifier 2
+struct OnKeyPress: ViewModifier {
+  var c: VM
+//  @Binding var c: VM  //
+  let codes: [[String]]
+  func body(content: Content) -> some View {
+    content
+      .focusable()
+      .onKeyPress { press in
+        // 押されたキーが矢印キーかどうかを判定
+        let keyEquivalent = press.characters.first!
+        let pos = codes.binarySearch { $0[0] < c.ticker }
+        if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
+          print("right pressed")
+          Task {
+            if pos == codes.count - 1 {
+              c.ticker = codes.first!.first!
+            } else {
+              c.ticker = codes[pos + 1].first!
+            }
+          }
+          return .handled
+        } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
+          print("left pressed")
+          Task {
+            if pos == 0 {
+              c.ticker = codes.last!.first!
+            } else {
+              c.ticker = codes[pos - 1].first!
+            }
+          }
+          return .handled
+        }
+        print(press.characters)
+        return .handled
+      }
+  }
+}
+
 
 // MARK: Shape
 struct CursorLine: Shape {
@@ -287,7 +294,7 @@ extension ChartView3 {
     }  // V
     .padding()
   }  // popUp
-  // MARK: textBox in popUp
+// MARK: textBox in popUp
 //  func textBox() -> some View { // arg txtは必要?
     func textBox(txt: Binding<String>) -> some View {
     HStack {
@@ -307,6 +314,7 @@ extension ChartView3 {
   /// obtain the array of the detailed code related info
   /// - Parameter code
   /// - Returns: [code, name, market, capital, feat, category]
+  // MARK: findInfo
   func findInfo(_ code: String) -> [String] {
     if let info = codes.first(where: { e in e[0] == code }) {
       return info//Array(info[0..<4])
@@ -315,6 +323,7 @@ extension ChartView3 {
       return info
     }
   }
+  // MARK: findNext
   func findNext(_ code: String) -> [String] {
     for i in codes.indices {
       if codes[i][0] == code {
@@ -332,6 +341,7 @@ extension ChartView3 {
   /// <#Description#>
   /// - Parameter scPos: <#scPos description#>
   /// - Returns: <#description#>
+  // MARK: codeInfo
   func codeInfo(_ scPos: Int?) -> String {
     if scPos != nil && codes.isEmpty == false {
       print(scPos!)
