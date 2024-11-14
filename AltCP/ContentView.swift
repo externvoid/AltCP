@@ -23,12 +23,10 @@ struct ChartView3: View {
   @State var hoLoc: CGPoint = .zero
   @State var oldLoc: CGPoint = .zero
 
-  @StateObject var c: VM = .init()  //ar: []) // @StateObject
+  @StateObject var c: VM
    init(selected: String) {
      _c = StateObject(wrappedValue: VM(ticker: selected))
    }
-//  @Binding var selected: String
-  //  @Binding var c: VM //= .init(ar: VM.dummy)
   @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key

@@ -11,12 +11,17 @@ public typealias candle = (
   close: Double, volume: Double
 )
 public typealias xtick = (date: Date?, norm: Int, st: Bool)
+public enum Typ: Int { case dy = 0; case wk = 1; case mn = 2 }
 // FIXME: conflicting code vs ticker
 
 // MARK: VM
 @MainActor
 public class VM: ObservableObject {
   @Published public var ar: [candle] = []
+  @Published public var typ: Typ = .dy
+  var wk:[candle] = []
+  var mn:[candle] = []
+  var tp:[candle] = []
   @Published public var ticker: String = ""
   {
     didSet {
@@ -27,6 +32,7 @@ public class VM: ObservableObject {
       }
     }
   }
+  let dateFormatter = DateFormatter()
 #if DEBUG
   public init(ar: [candle] = dummy, ticker: String = "0000") {
     print("N225")

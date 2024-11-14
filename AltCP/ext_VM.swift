@@ -1,11 +1,104 @@
-//
-//  ext_VM.swift
-//  AltCP
-//
 //  Created by Tanaka Hiroshi on 2024/10/01.
-//
+import Foundation
+// MARK: 週足
+extension VM {
+  // 格納しているdateは週初め
+  func convertToWeeklyData(from dailyData: [candle]) -> [candle] {
+    var weeklyData: [candle] = []
+    var tempWeekData: [candle] = []
 
+//    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy/MM/dd"
+    let calendar = Calendar.current
 
+    for day in dailyData {
+      let date = dateFormatter.date(from: day.date)!
+      let weekday = calendar.component(.weekday, from: date)
+      let dayOfMonth = calendar.component(.day, from: date)
+      let monthOfYear = calendar.component(.month, from: date)
+
+      // 日曜日または12月31日になったら週データを確定する
+      let isMonday = weekday == 2  // 日曜日はweekdayが1になる
+      let isEndOfYear = (dayOfMonth == 31 && monthOfYear == 12) // 12月31日
+
+      if (isMonday || isEndOfYear) && !tempWeekData.isEmpty {
+        let open = tempWeekData.first!.open
+        let close = tempWeekData.last!.close
+        let high = tempWeekData.map { $0.high }.max()!
+        let low = tempWeekData.map { $0.low }.min()!
+        let volume = tempWeekData.map { $0.volume }.reduce(0, +)
+        let weekDate = tempWeekData.first!.date
+
+        weeklyData.append((date: weekDate, open: open, high: high, low: low, close: close, volume: volume))
+        tempWeekData.removeAll()
+      }
+
+      tempWeekData.append(day)
+    }
+
+    // 残った最後の週も追加
+    if !tempWeekData.isEmpty {
+      let open = tempWeekData.first!.open
+      let close = tempWeekData.last!.close
+      let high = tempWeekData.map { $0.high }.max()!
+      let low = tempWeekData.map { $0.low }.min()!
+      let volume = tempWeekData.map { $0.volume }.reduce(0, +)
+      let weekDate = tempWeekData.first!.date
+
+      weeklyData.append((date: weekDate, open: open, high: high, low: low, close: close, volume: volume))
+    }
+
+    return weeklyData
+  }
+  // MARK: 月足
+  func convertToMonthlyData(from dailyData: [candle]) -> [candle] {
+    dateFormatter.dateFormat = "yyyy/MM/dd"
+
+    var monthlyData: [candle] = []
+    var tempMonthData: [candle] = []
+    let calendar = Calendar.current
+
+    for day in dailyData {
+      let date = dateFormatter.date(from: day.date)!
+      let dayMonth = calendar.component(.month, from: date)
+      // let year = calendar.component(.year, from: date)
+      // let monthKey = (year, dayMonth)
+
+      if let firstDate = tempMonthData.first,
+         let firstDateObj = dateFormatter.date(from: firstDate.date),
+         calendar.component(.month, from: firstDateObj) != dayMonth {
+        // 月が変わったら月データを確定
+        let open = tempMonthData.first!.open
+        let close = tempMonthData.last!.close
+        let high = tempMonthData.map { $0.high }.max()!
+        let low = tempMonthData.map { $0.low }.min()!
+        let volume = tempMonthData.map { $0.volume }.reduce(0, +)
+        let monthDate = tempMonthData.first!.date
+
+        monthlyData.append((date: monthDate, open: open, high: high, low: low, close: close, volume: volume))
+        tempMonthData.removeAll()
+      }
+
+      tempMonthData.append(day)
+    }
+
+    // 残った最後の月も追加
+    if !tempMonthData.isEmpty {
+      let open = tempMonthData.first!.open
+      let close = tempMonthData.last!.close
+      let high = tempMonthData.map { $0.high }.max()!
+      let low = tempMonthData.map { $0.low }.min()!
+      let volume = tempMonthData.map { $0.volume }.reduce(0, +)
+      let monthDate = tempMonthData.first!.date
+
+      monthlyData.append((date: monthDate, open: open, high: high, low: low, close: close, volume: volume))
+    }
+
+    return monthlyData
+  }
+}
+
+#if DEBUG
 extension VM {
   public static let dummy: [candle] = [
     // 0        , 1   , 2   , 3   , 4   , 5
@@ -62,3 +155,4 @@ extension VM {
   ]
 
 }
+#endif
