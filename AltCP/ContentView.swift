@@ -156,11 +156,12 @@ struct OnHover: ViewModifier {
     }
   }
 }
-// MARK: ViewModifier 2
+// MARK: ViewModifier 2, see Function-Key Unicode Values
 struct OnKeyPress: ViewModifier {
   var c: VM
 //  @Binding var c: VM  //
   let codes: [[String]]
+  let off: Int = 100
   func body(content: Content) -> some View {
     content
       .focusable()
@@ -175,6 +176,26 @@ struct OnKeyPress: ViewModifier {
               c.ticker = codes.first!.first!
             } else {
               c.ticker = codes[pos + 1].first!
+            }
+          }
+          return .handled
+        } else if keyEquivalent == Character(UnicodeScalar(NSUpArrowFunctionKey)!) {
+          print("up pressed")
+          Task {
+            if pos >= codes.count - off {
+              c.ticker = codes[pos + off - codes.count].first!
+            } else {
+              c.ticker = codes[pos + off].first!
+            }
+          }
+          return .handled
+        } else if keyEquivalent == Character(UnicodeScalar(NSDownArrowFunctionKey)!) {
+          print("down pressed")
+          Task {
+            if pos <= off {
+              c.ticker = codes[pos - off + codes.count].first!
+            } else {
+              c.ticker = codes[pos - off].first!
             }
           }
           return .handled

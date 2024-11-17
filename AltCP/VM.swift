@@ -28,7 +28,8 @@ public class VM: ObservableObject {
       print("--- didSet ticker: \(ticker)---")
       Task {
         ar = try! await Networker.queryHist(
-          ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+//          ticker, DBPath.dbPath(0), DBPath.dbPath(2))
+        ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
       }
     }
   }
