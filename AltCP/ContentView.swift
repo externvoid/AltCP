@@ -69,6 +69,7 @@ struct ChartView3: View {
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
+    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
   }  // body
 }  // View
 extension ChartView3 {
@@ -157,6 +158,7 @@ struct OnHover: ViewModifier {
   }
 }
 // MARK: ViewModifier 2, see Function-Key Unicode Values
+// https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-and-respond-to-key-press-events
 struct OnKeyPress: ViewModifier {
   var c: VM
 //  @Binding var c: VM  //

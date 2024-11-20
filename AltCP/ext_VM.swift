@@ -7,21 +7,16 @@ extension VM {
     var weeklyData: [candle] = []
     var tempWeekData: [candle] = []
 
-//    let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy/MM/dd"
     let calendar = Calendar.current
+    var currentWeekOfYear: Int? = nil
 
     for day in dailyData {
-      let date = dateFormatter.date(from: day.date)!
-      let weekday = calendar.component(.weekday, from: date)
-      let dayOfMonth = calendar.component(.day, from: date)
-      let monthOfYear = calendar.component(.month, from: date)
+      let utcDate = dateFormatter.date(from: day.date)!
+      let weekOfYear = calendar.component(.weekOfYear, from: utcDate)
+      // 週番号が変わったら週データを確定する
+      if currentWeekOfYear != nil && currentWeekOfYear != weekOfYear && !tempWeekData.isEmpty {
 
-      // 日曜日または12月31日になったら週データを確定する
-      let isMonday = weekday == 2  // 日曜日はweekdayが1になる
-      let isEndOfYear = (dayOfMonth == 31 && monthOfYear == 12) // 12月31日
-
-      if (isMonday || isEndOfYear) && !tempWeekData.isEmpty {
         let open = tempWeekData.first!.open
         let close = tempWeekData.last!.close
         let high = tempWeekData.map { $0.high }.max()!
@@ -32,7 +27,7 @@ extension VM {
         weeklyData.append((date: weekDate, open: open, high: high, low: low, close: close, volume: volume))
         tempWeekData.removeAll()
       }
-
+      currentWeekOfYear = weekOfYear
       tempWeekData.append(day)
     }
 
@@ -59,8 +54,8 @@ extension VM {
     let calendar = Calendar.current
 
     for day in dailyData {
-      let date = dateFormatter.date(from: day.date)!
-      let dayMonth = calendar.component(.month, from: date)
+      let utcDate = dateFormatter.date(from: day.date)!
+      let dayMonth = calendar.component(.month, from: utcDate)
       // let year = calendar.component(.year, from: date)
       // let monthKey = (year, dayMonth)
 

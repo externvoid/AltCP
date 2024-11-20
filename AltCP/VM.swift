@@ -18,22 +18,53 @@ public enum Typ: Int { case dy = 0; case wk = 1; case mn = 2 }
 @MainActor
 public class VM: ObservableObject {
   @Published public var ar: [candle] = []
-  @Published public var typ: Typ = .dy
   var wk:[candle] = []
   var mn:[candle] = []
-  var tp:[candle] = []
+  var dy:[candle] = []
+  var prevTicker: String = ""
+  var prevTyp: Typ = .dy
   @Published public var ticker: String = ""
   {
     didSet {
       print("--- didSet ticker: \(ticker)---")
       Task {
-        ar = try! await Networker.queryHist(
-//          ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-        ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+        if typ == .dy {
+          dy = try! await Networker.queryHist(
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+          ar = dy
+        } else if typ == .wk {
+          dy = try! await Networker.queryHist(
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+          wk = convertToWeeklyData(from: dy)
+          ar = wk
+        } else if typ == .mn {
+          dy = try! await Networker.queryHist(
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+          mn = convertToMonthlyData(from: dy)
+          ar = mn
+        }
       }
     }
   }
-  let dateFormatter = DateFormatter()
+  @Published public var typ: Typ = .dy
+  {
+    didSet {
+      print("--- didSet typ: \(typ)---")
+      Task {
+        if typ == .dy {
+          ar = dy
+        } else if typ == .wk {
+          wk = convertToWeeklyData(from: dy)
+          ar = wk
+        } else if typ == .mn {
+          mn = convertToMonthlyData(from: dy)
+          ar = mn
+        }
+      }
+    }
+  }
+  let dateFormatter = Date.formatter
+//  let dateFormatter = DateFormatter()
 #if DEBUG
   public init(ar: [candle] = dummy, ticker: String = "0000") {
     print("N225")
