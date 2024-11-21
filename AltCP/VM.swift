@@ -12,7 +12,6 @@ public typealias candle = (
 )
 public typealias xtick = (date: Date?, norm: Int, st: Bool)
 public enum Typ: Int { case dy = 0; case wk = 1; case mn = 2 }
-// FIXME: conflicting code vs ticker
 
 // MARK: VM
 @MainActor
@@ -30,18 +29,19 @@ public class VM: ObservableObject {
       Task {
         if typ == .dy {
           dy = try! await Networker.queryHist(
-            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
-          ar = dy
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
+//          ar = dy
+          ar = Array(dy.suffix(100))
         } else if typ == .wk {
           dy = try! await Networker.queryHist(
-            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           wk = convertToWeeklyData(from: dy)
-          ar = wk
+          ar = Array(wk.suffix(100))
         } else if typ == .mn {
           dy = try! await Networker.queryHist(
-            ticker, DBPath.dbPath(0), DBPath.dbPath(2), 100)
+            ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           mn = convertToMonthlyData(from: dy)
-          ar = mn
+          ar = Array(mn.suffix(100))
         }
       }
     }
@@ -52,13 +52,16 @@ public class VM: ObservableObject {
       print("--- didSet typ: \(typ)---")
       Task {
         if typ == .dy {
-          ar = dy
+//          ar = dy
+          ar = Array(dy.suffix(100))
         } else if typ == .wk {
           wk = convertToWeeklyData(from: dy)
-          ar = wk
+//          ar = wk
+          ar = Array(wk.suffix(100))
         } else if typ == .mn {
           mn = convertToMonthlyData(from: dy)
-          ar = mn
+//          ar = mn
+          ar = Array(mn.suffix(100))
         }
       }
     }
@@ -128,6 +131,7 @@ public class VM: ObservableObject {
     }
     return ret
   }
+  // 月初を検出
   public var xticks: [xtick] {
     var ret: [xtick] = []
     var st: Bool = false
@@ -147,5 +151,9 @@ public class VM: ObservableObject {
   // MARK: - 日付文字列が月(Int)だけ取出し
   public func extractMonth(_ str: String) -> Int? {
     return Int(str.components(separatedBy: "/")[1])
+  }
+  // MARK: - 日付文字列が年(Int)だけ取出し
+  public func extractYear(_ str: String) -> Int? {
+    return Int(str.components(separatedBy: "/")[0])
   }
 }  // end of class

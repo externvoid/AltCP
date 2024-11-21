@@ -70,6 +70,8 @@ struct ChartView3: View {
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
     .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
+    .modifier(TitleBarMnu())
+    .modifier(TitleBarBtn(c: c))
   }  // body
 }  // View
 extension ChartView3 {
@@ -137,6 +139,8 @@ extension ChartView3 {
 
 // MARK: ViewModifier 1
 struct OnHover: ViewModifier {
+//  var hoLoc: CGPoint  // = .zero
+//  var oldLoc: CGPoint  // = .zero
   @Binding var hoLoc: CGPoint  // = .zero
   @Binding var oldLoc: CGPoint  // = .zero
   let fsize: CGSize
@@ -160,7 +164,7 @@ struct OnHover: ViewModifier {
 // MARK: ViewModifier 2, see Function-Key Unicode Values
 // https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-and-respond-to-key-press-events
 struct OnKeyPress: ViewModifier {
-  var c: VM
+  var c: VM // inout
 //  @Binding var c: VM  //
   let codes: [[String]]
   let off: Int = 100
@@ -377,7 +381,7 @@ extension ChartView3 {
 #Preview {
   ContentView()
     .navigationTitle("ooPs")
-    .frame(width: 400, height: 260)
+    .frame(width: 420, height: 360)
 //    .frame(width: 200, height: 200)
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)

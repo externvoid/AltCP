@@ -69,18 +69,52 @@ extension ChartView3 {
     let n = c.ar.count
     let w = width / CGFloat(n)
     //    let mtx = CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: -1.0, tx: 0.0, ty: h)
+    switch c.typ {
+      case .dy:
+        for (i, e) in c.xticks.enumerated() {
+          //    print(i, e.st)
+          let point = CGPoint(x: CGFloat(i) * w, y: 0.0)
+          if e.st == true {
+            let strDate = Date.formatter.string(from: e.date!)  // => 2023/05/25
+            let mo: Int = c.extractMonth(strDate)!
+            var text: Text { Text("\(mo)月").font(.system(size: 11.5)) }
+            ctx.draw(
+              text,  // no affine trs frm
+              at: point, anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
+          }
+        }
 
-    for (i, e) in c.xticks.enumerated() {
-      //    print(i, e.st)
-      let point = CGPoint(x: CGFloat(i) * w, y: 0.0)
-      if e.st == true {
-        let strDate = Date.formatter.string(from: e.date!)  // => 2023/05/25
-        let mo: Int = c.extractMonth(strDate)!
-        var text: Text { Text("\(mo)月").font(.system(size: 11.5)) }
-        ctx.draw(
-          text,  // no affine trs frm
-          at: point, anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
-      }
+      case .wk:
+        for (i, e) in c.xticks.enumerated() {
+          //    print(i, e.st)
+          let point = CGPoint(x: CGFloat(i) * w, y: 0.0)
+          if e.st == true {
+            let strDate = Date.formatter.string(from: e.date!)  // => 2023/05/25
+            let mo: Int = c.extractMonth(strDate)!
+            if mo % 3 != 1 { continue }
+            var text: Text { Text("\(mo)月").font(.system(size: 11.5)) }
+            ctx.draw(
+              text,  // no affine trs frm
+              at: point, anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
+          }
+        }
+      case .mn:
+        for (i, e) in c.xticks.enumerated() {
+          //    print(i, e.st)
+          let point = CGPoint(x: CGFloat(i) * w, y: 0.0)
+          if e.st == true {
+            let strDate = Date.formatter.string(from: e.date!)  // => 2023/05/25
+            let mo: Int = c.extractMonth(strDate)!
+            if mo % 12 != 1 { continue }
+            let yr: Int = c.extractYear(strDate)!
+            // FIXME: 要適当なキャプション
+            if yr % 2 != 0 { continue }
+            var text: Text { Text("\(yr)").font(.system(size: 11.5)) }
+            ctx.draw(
+              text,  // no affine trs frm
+              at: point, anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
+          }
+        }
     }
   }
 
@@ -145,5 +179,87 @@ extension ChartView3 {
     }
     ctx.fill(pf.applying(mt0).applying(mtx), with: .color(.blue))
     ctx.stroke(ps.applying(mt0).applying(mtx), with: .color(.blue))
+  }
+}
+// MARK: ViewModifier 1
+struct TitleBarMnu: ViewModifier {
+  func body(content: Content) -> some View {
+    content
+      .toolbar { // toolbarTitleMenu
+        ToolbarItem(placement: .primaryAction) {
+          Menu {
+            Button(action: {
+              print("home tapped")
+            }) {
+              Text("ホーム")
+              Image(systemName: "house")
+            }
+            Button(action: {
+              print("setting tapped")
+            }) {
+              Text("設定")
+              Image(systemName: "gearshape")
+            }
+            Button("オプション 1") {
+              print("Option 1 selected")
+            }
+            Button("オプション 2") {
+              print("Option 2 selected")
+            }
+            Button("オプション 3") {
+              print("Option 3 selected")
+            }
+          } label: {
+            Text("Menu")
+          }
+        }
+      } // toolbar
+  }
+}
+struct TitleBarBtn: ViewModifier {
+  var c:VM
+  func body(content: Content) -> some View {
+    content
+      .toolbar {
+        HStack(spacing:0) {
+//          Spacer()
+
+          Button(action: {
+            print("Daily tapped")
+            c.typ = .dy
+          }) {
+            if c.typ == .dy {
+              Image(systemName: "d.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .yellow)
+              //              .font(.system(size: 50)) // uneffective
+
+            } else { // not trapped
+              Image(systemName: "d.square.fill")
+            }
+          }
+//          .disabled(c.typ == .dy)
+
+          Button(action: {
+            print("Weekly tapped")
+            c.typ = .wk
+          }) {
+            Image(systemName: "w.square.fill")
+              .symbolRenderingMode(.palette)
+              .foregroundStyle(.blue, .gray)
+          }
+          .disabled(c.typ == .wk)
+
+          Button(action: {
+            print("Monthly selected")
+            c.typ = .mn
+          }) {
+            Image(systemName: "m.square.fill")
+              .symbolRenderingMode(.palette)
+              .foregroundStyle(.red, .green)
+          }
+          .disabled(c.typ == .mn)
+        }
+      } // toolbar
   }
 }
