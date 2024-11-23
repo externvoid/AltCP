@@ -71,7 +71,8 @@ struct ChartView3: View {
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
     .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
     .modifier(TitleBarMnu())
-    .modifier(TitleBarBtn(c: c))
+    .modifier(TitleBarBtn(typ: $c.typ))
+    .navigationTitle(c.ticker)
   }  // body
 }  // View
 extension ChartView3 {

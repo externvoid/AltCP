@@ -99,6 +99,7 @@ extension ChartView3 {
           }
         }
       case .mn:
+        var notFound = true
         for (i, e) in c.xticks.enumerated() {
           //    print(i, e.st)
           let point = CGPoint(x: CGFloat(i) * w, y: 0.0)
@@ -109,11 +110,21 @@ extension ChartView3 {
             let yr: Int = c.extractYear(strDate)!
             // FIXME: 要適当なキャプション
             if yr % 2 != 0 { continue }
+            notFound = false
             var text: Text { Text("\(yr)").font(.system(size: 11.5)) }
             ctx.draw(
               text,  // no affine trs frm
               at: point, anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
           }
+        }
+        if notFound {
+          let strDate = Date.formatter.string(from: c.xticks[0].date!)  // => 2023/05/25
+          let yr: Int = c.extractYear(strDate)!
+          var text: Text { Text("\(yr)").font(.system(size: 11.5)) }
+          ctx.draw(
+            text,  // no affine trs frm
+            at: CGPoint(x: 0.0, y: 0.0), anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
+          print("notFound")
         }
     }
   }
@@ -217,7 +228,7 @@ struct TitleBarMnu: ViewModifier {
   }
 }
 struct TitleBarBtn: ViewModifier {
-  var c:VM
+  @Binding var typ: Typ
   func body(content: Content) -> some View {
     content
       .toolbar {
@@ -225,40 +236,47 @@ struct TitleBarBtn: ViewModifier {
 //          Spacer()
 
           Button(action: {
-            print("Daily tapped")
-            c.typ = .dy
+            debugPrint("Daily tapped")
+            typ = .dy
           }) {
-            if c.typ == .dy {
+            if typ == .dy {
               Image(systemName: "d.square.fill")
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.red, .yellow)
-              //              .font(.system(size: 50)) // uneffective
 
-            } else { // not trapped
+            } else {
               Image(systemName: "d.square.fill")
             }
           }
-//          .disabled(c.typ == .dy)
+          .disabled(typ == .dy)
 
           Button(action: {
             print("Weekly tapped")
-            c.typ = .wk
+            typ = .wk
           }) {
+            if typ == .wk {
             Image(systemName: "w.square.fill")
               .symbolRenderingMode(.palette)
-              .foregroundStyle(.blue, .gray)
+              .foregroundStyle(.blue, .pink)
+            } else { // not trapped
+              Image(systemName: "w.square.fill")
+            }
           }
-          .disabled(c.typ == .wk)
+          .disabled(typ == .wk)
 
           Button(action: {
             print("Monthly selected")
-            c.typ = .mn
+            typ = .mn
           }) {
+            if typ == .mn {
             Image(systemName: "m.square.fill")
               .symbolRenderingMode(.palette)
               .foregroundStyle(.red, .green)
+            } else {
+              Image(systemName: "m.square.fill")
+            }
           }
-          .disabled(c.typ == .mn)
+          .disabled(typ == .mn)
         }
       } // toolbar
   }

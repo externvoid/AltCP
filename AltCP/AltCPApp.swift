@@ -5,10 +5,11 @@ import SwiftUI
 struct AltCPApp: App {
   var appState: AppState = .init()
     var body: some Scene {
-        WindowGroup("ChartPlot") {
+        WindowGroup() {
+//          WindowGroup("ChartPlot") {
             ContentView()
 //            .navigationTitle("ChartPlot")
-            .frame(minWidth: 400, minHeight: 400)
+            .frame(minWidth: 500, minHeight: 400)
         }
         .environmentObject(appState)
 //        .windowStyle(HiddenTitleBarWindowStyle())
