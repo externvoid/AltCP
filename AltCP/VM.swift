@@ -22,6 +22,19 @@ public class VM: ObservableObject {
   var dy:[candle] = []
   var prevTicker: String = ""
   var prevTyp: Typ = .dy
+  @Published var limit: Int = 90
+  {
+    didSet {
+      switch typ {
+        case .dy:
+          ar = Array(dy.suffix(limit))
+        case .wk:
+          ar = Array(wk.suffix(limit))
+        case .mn:
+        ar = Array(mn.suffix(limit))
+      }
+    }
+  }
   @Published public var ticker: String = ""
   {
     didSet {
@@ -31,17 +44,17 @@ public class VM: ObservableObject {
           dy = try! await Networker.queryHist(
             ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
 //          ar = dy
-          ar = Array(dy.suffix(100))
+          ar = Array(dy.suffix(limit))
         } else if typ == .wk {
           dy = try! await Networker.queryHist(
             ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           wk = convertToWeeklyData(from: dy)
-          ar = Array(wk.suffix(100))
+          ar = Array(wk.suffix(limit))
         } else if typ == .mn {
           dy = try! await Networker.queryHist(
             ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           mn = convertToMonthlyData(from: dy)
-          ar = Array(mn.suffix(100))
+          ar = Array(mn.suffix(limit))
         }
       }
     }
@@ -53,15 +66,15 @@ public class VM: ObservableObject {
       Task {
         if typ == .dy {
 //          ar = dy
-          ar = Array(dy.suffix(100))
+          ar = Array(dy.suffix(limit))
         } else if typ == .wk {
           wk = convertToWeeklyData(from: dy)
 //          ar = wk
-          ar = Array(wk.suffix(100))
+          ar = Array(wk.suffix(limit))
         } else if typ == .mn {
           mn = convertToMonthlyData(from: dy)
 //          ar = mn
-          ar = Array(mn.suffix(100))
+          ar = Array(mn.suffix(limit))
         }
       }
     }

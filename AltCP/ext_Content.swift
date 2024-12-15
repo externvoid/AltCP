@@ -129,7 +129,7 @@ extension ChartView3 {
     }
   }
 
-  // MARK: - draw 価格、横軸 & 銘柄コード、銘柄名、特徴
+  // MARK: - draw 横軸キャプション+横線 & 銘柄コード、銘柄名、特徴
   // ticker2nameの実装が必要
   func gridlines(_ ctx: GraphicsContext, _ size: CGSize) {
     if c.ar.isEmpty { return }
@@ -138,7 +138,7 @@ extension ChartView3 {
     let mtx = CGAffineTransform(
       a: 1.0, b: 0.0, c: 0.0, d: -h / c.qheight, tx: 0.0, ty: h)
     let mt0 = CGAffineTransform.identity.translatedBy(x: 0, y: -c.min)
-    var ps = Path()  // 陽線、白塗り, 陽線、枠だけ
+    var ps = Path()  // 横線(破線)
     c.yticks.forEach { e in
       ps.move(to: CGPoint(x: rect.minX, y: e))
       ps.addLine(to: CGPoint(x: rect.maxX, y: e))
@@ -147,7 +147,7 @@ extension ChartView3 {
       ps.applying(mt0).applying(mtx), with: .color(.gray),
       style: StrokeStyle(dash: [2, 2, 2, 2]))
     // Axis Labels▶️ticks2の中身を再考
-    var rticks: [Int] = []
+    var rticks: [Int] = [] // ytick: [Double]
     for e in c.yticks.reversed() { rticks.append(Int(e)) }
 
     for (i, e) in rticks.enumerated() {
@@ -190,94 +190,5 @@ extension ChartView3 {
     }
     ctx.fill(pf.applying(mt0).applying(mtx), with: .color(.blue))
     ctx.stroke(ps.applying(mt0).applying(mtx), with: .color(.blue))
-  }
-}
-// MARK: ViewModifier 1
-struct TitleBarMnu: ViewModifier {
-  func body(content: Content) -> some View {
-    content
-      .toolbar { // toolbarTitleMenu
-        ToolbarItem(placement: .primaryAction) {
-          Menu {
-            Button(action: {
-              print("home tapped")
-            }) {
-              Text("ホーム")
-              Image(systemName: "house")
-            }
-            Button(action: {
-              print("setting tapped")
-            }) {
-              Text("設定")
-              Image(systemName: "gearshape")
-            }
-            Button("オプション 1") {
-              print("Option 1 selected")
-            }
-            Button("オプション 2") {
-              print("Option 2 selected")
-            }
-            Button("オプション 3") {
-              print("Option 3 selected")
-            }
-          } label: {
-            Text("Menu")
-          }
-        }
-      } // toolbar
-  }
-}
-struct TitleBarBtn: ViewModifier {
-  @Binding var typ: Typ
-  func body(content: Content) -> some View {
-    content
-      .toolbar {
-        HStack(spacing:0) {
-//          Spacer()
-
-          Button(action: {
-            debugPrint("Daily tapped")
-            typ = .dy
-          }) {
-            if typ == .dy {
-              Image(systemName: "d.square.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.red, .yellow)
-
-            } else {
-              Image(systemName: "d.square.fill")
-            }
-          }
-          .disabled(typ == .dy)
-
-          Button(action: {
-            print("Weekly tapped")
-            typ = .wk
-          }) {
-            if typ == .wk {
-            Image(systemName: "w.square.fill")
-              .symbolRenderingMode(.palette)
-              .foregroundStyle(.blue, .pink)
-            } else { // not trapped
-              Image(systemName: "w.square.fill")
-            }
-          }
-          .disabled(typ == .wk)
-
-          Button(action: {
-            print("Monthly selected")
-            typ = .mn
-          }) {
-            if typ == .mn {
-            Image(systemName: "m.square.fill")
-              .symbolRenderingMode(.palette)
-              .foregroundStyle(.red, .green)
-            } else {
-              Image(systemName: "m.square.fill")
-            }
-          }
-          .disabled(typ == .mn)
-        }
-      } // toolbar
   }
 }

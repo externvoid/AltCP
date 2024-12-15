@@ -11,11 +11,12 @@ struct ContentView: View {
       ChartView3(selected: sels)
 //      ChartView3(selected: $sels[0])
     }
-    .padding(.all, 3)
+    .padding(.bottom, 4.5)
+    .padding([.top, .leading, .trailing], 3)
   }
 }
 
-/// - Description
+/// - Description: plot wrapper
 /// - Parameter selected: ticker code
 struct ChartView3: View {
 //  @EnvironmentObject var appState: AppState  // 無視
@@ -43,7 +44,7 @@ struct ChartView3: View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
       if !c.ar.isEmpty {
-        plot(fsize: fsize)  //, hoLoc: $hoLoc)
+        plot(fsize: fsize) // MARK: plot
       }
     }  // geo
     .onChange(of: c.ticker) {
@@ -69,8 +70,8 @@ struct ChartView3: View {
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
-    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
-    .modifier(TitleBarMnu())
+//    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
+    .modifier(TitleBarMnu(limit: $c.limit))
     .modifier(TitleBarBtn(typ: $c.typ))
     .navigationTitle(c.ticker)
   }  // body
@@ -103,10 +104,14 @@ extension ChartView3 {
         if !c.ar.isEmpty {
           let v = Int(c.ar[i].volume)
           let d = c.ar[i].date
-          let o = Int(c.ar[i].open)
-          let h = Int(c.ar[i].high)
-          let l = Int(c.ar[i].low)
-          let cl = Int(c.ar[i].close)
+//          let o = Int(c.ar[i].open)
+//          let h = Int(c.ar[i].high)
+//          let l = Int(c.ar[i].low)
+//          let cl = Int(c.ar[i].close)
+          let o = String(format: "%.1f", c.ar[i].open)
+          let h = String(format: "%.1f", c.ar[i].high)
+          let l = String(format: "%.1f", c.ar[i].low)
+          let cl = String(format: "%.1f", c.ar[i].close)
           var ch = 0.0
           if i != 0 {
             ch = (c.ar[i].close - c.ar[i - 1].close) / c.ar[i - 1].close * 100.0
@@ -137,92 +142,6 @@ extension ChartView3 {
     }
   }  // dateOHLCV
 }
-
-// MARK: ViewModifier 1
-struct OnHover: ViewModifier {
-//  var hoLoc: CGPoint  // = .zero
-//  var oldLoc: CGPoint  // = .zero
-  @Binding var hoLoc: CGPoint  // = .zero
-  @Binding var oldLoc: CGPoint  // = .zero
-  let fsize: CGSize
-  func body(content: Content) -> some View {
-    content.onContinuousHover { isHovered in
-      switch isHovered {
-      case .active(let loc):
-        hoLoc = loc
-        oldLoc = loc
-      //        print("loc: \(loc)")
-      case .ended:
-        if oldLoc.x < fsize.width / 2.0 {
-          hoLoc = .zero
-        } else {
-          hoLoc = CGPoint(x: fsize.width, y: 0.0)
-        }
-      }
-    }
-  }
-}
-// MARK: ViewModifier 2, see Function-Key Unicode Values
-// https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-and-respond-to-key-press-events
-struct OnKeyPress: ViewModifier {
-  var c: VM // inout
-//  @Binding var c: VM  //
-  let codes: [[String]]
-  let off: Int = 100
-  func body(content: Content) -> some View {
-    content
-      .focusable()
-      .onKeyPress { press in
-        // 押されたキーが矢印キーかどうかを判定
-        let keyEquivalent = press.characters.first!
-        let pos = codes.binarySearch { $0[0] < c.ticker }
-        if keyEquivalent == Character(UnicodeScalar(NSRightArrowFunctionKey)!) {
-          print("right pressed")
-          Task {
-            if pos == codes.count - 1 {
-              c.ticker = codes.first!.first!
-            } else {
-              c.ticker = codes[pos + 1].first!
-            }
-          }
-          return .handled
-        } else if keyEquivalent == Character(UnicodeScalar(NSUpArrowFunctionKey)!) {
-          print("up pressed")
-          Task {
-            if pos >= codes.count - off {
-              c.ticker = codes[pos + off - codes.count].first!
-            } else {
-              c.ticker = codes[pos + off].first!
-            }
-          }
-          return .handled
-        } else if keyEquivalent == Character(UnicodeScalar(NSDownArrowFunctionKey)!) {
-          print("down pressed")
-          Task {
-            if pos <= off {
-              c.ticker = codes[pos - off + codes.count].first!
-            } else {
-              c.ticker = codes[pos - off].first!
-            }
-          }
-          return .handled
-        } else if keyEquivalent == Character(UnicodeScalar(NSLeftArrowFunctionKey)!) {
-          print("left pressed")
-          Task {
-            if pos == 0 {
-              c.ticker = codes.last!.first!
-            } else {
-              c.ticker = codes[pos - 1].first!
-            }
-          }
-          return .handled
-        }
-        print(press.characters)
-        return .handled
-      }
-  }
-}
-
 
 // MARK: Shape
 struct CursorLine: Shape {
@@ -257,7 +176,8 @@ extension ChartView3 {
             //            .imageScale(.large)
             //            .foregroundStyle(.tint)
             .foregroundStyle(
-              Color(red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3)
+              Color(.green.opacity(0.4))
+//              Color(red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3)
             )
             .symbolEffect(.bounce, value: isShown)
         }
@@ -364,9 +284,9 @@ extension ChartView3 {
 //    fatalError("fatal in findNext")
   }
 
-  /// <#Description#>
-  /// - Parameter scPos: <#scPos description#>
-  /// - Returns: <#description#>
+  /// - Description: the index to ticker and company name.
+  /// - Parameter scPos: the index of Array of Array, that is codes.
+  /// - Returns: ticker and company name.
   // MARK: codeInfo
   func codeInfo(_ scPos: Int?) -> String {
     if scPos != nil && codes.isEmpty == false {

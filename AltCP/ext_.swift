@@ -40,6 +40,10 @@ extension Date {
 // https://stackoverflow.com/questions/31904396/swift-binary-search-for-standard-array
 
 // Created 2024/11/10.
+// MARK: binarySearch usage
+// var r: Int
+// r = ar.binarySearch { $0.date < "2024/06/29" } => "2024/07/01"
+// r = ar.binarySearch { $0[0] < "3320" }
 
 extension RandomAccessCollection {
   /// Finds such index N that predicate is true for all elements up to
