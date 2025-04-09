@@ -102,24 +102,26 @@ extension ChartView3 {
       }
       var str: String {
         if !c.ar.isEmpty {
-          let v = Int(c.ar[i].volume)
+          let v = c.ar[i].volume.formatNumber
+//          let v = Int(c.ar[i].volume)
           let d = c.ar[i].date
-//          let o = Int(c.ar[i].open)
-//          let h = Int(c.ar[i].high)
-//          let l = Int(c.ar[i].low)
-//          let cl = Int(c.ar[i].close)
-          let o = String(format: "%.1f", c.ar[i].open)
-          let h = String(format: "%.1f", c.ar[i].high)
-          let l = String(format: "%.1f", c.ar[i].low)
-          let cl = String(format: "%.1f", c.ar[i].close)
+//          let o = String(format: "%.1f", c.ar[i].open)
+//          let h = String(format: "%.1f", c.ar[i].high)
+//          let l = String(format: "%.1f", c.ar[i].low)
+//          let cl = String(format: "%.1f", c.ar[i].close)
+          let o = c.ar[i].open.formatNumber
+          let h = c.ar[i].high.formatNumber
+          let l = c.ar[i].low.formatNumber
+          let cl = c.ar[i].close.formatNumber
           var ch = 0.0
           if i != 0 {
             ch = (c.ar[i].close - c.ar[i - 1].close) / c.ar[i - 1].close * 100.0
-            // round variable of Double ch into
-            ch = Double(String(format: "%.2f", ch))!
           }
           return
-            "d: \(d) v: \(v) ch: \(ch) %\no: \(o) h: \(h) l: \(l) c: \(cl)"
+            """
+            d: \(d) v: \(v) ch: \(String(format: "%5.2f", ch))%
+            o: \(o) h: \(h) l: \(l) c: \(cl)
+            """
           // fix wrong volume
         } else {
           return ""
@@ -130,7 +132,7 @@ extension ChartView3 {
         //        Text("hoLoc.x: \(hoLoc.x)")
         Text(str)
           //        Text("d: \(d) v: \(v)")  // fix wrong volume
-          .font(.system(size: 9.5, design: .monospaced))
+          .font(.system(size: 10.5, design: .monospaced))
           .foregroundColor(.yellow.opacity(0.6))
           .offset(y: -12)
         Spacer()

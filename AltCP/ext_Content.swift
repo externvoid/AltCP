@@ -129,7 +129,7 @@ extension ChartView3 {
     }
   }
 
-  // MARK: - draw 横軸キャプション+横線 & 銘柄コード、銘柄名、特徴
+  // MARK: - draw 縦軸目盛り線キャプション+横線 & 銘柄コード、銘柄名、特徴
   // ticker2nameの実装が必要
   func gridlines(_ ctx: GraphicsContext, _ size: CGSize) {
     if c.ar.isEmpty { return }
@@ -146,15 +146,11 @@ extension ChartView3 {
     ctx.stroke(
       ps.applying(mt0).applying(mtx), with: .color(.gray),
       style: StrokeStyle(dash: [2, 2, 2, 2]))
-    // Axis Labels▶️ticks2の中身を再考
-    var rticks: [Int] = [] // ytick: [Double]
-    for e in c.yticks.reversed() { rticks.append(Int(e)) }
 
-    for (i, e) in rticks.enumerated() {
-      let y: Double = -(Double(e) - c.min) * h / c.qheight + h
-      //    print("y: \(y)")
+    for e in c.yticks.reversed() {
+      let y: Double = -(e - c.min) * h / c.qheight + h
       ctx.draw(
-        Text(String(rticks[i])).font(.system(size: 10.5)),
+        Text(e.formatNumber).font(.system(size: 10.5)),
         at: CGPoint(x: rect.minX, y: y), anchor: UnitPoint(x: -0.0, y: -0.1))  //.bottomLeading)
     }
     ctx.draw(

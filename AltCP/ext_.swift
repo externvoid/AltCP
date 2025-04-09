@@ -65,6 +65,25 @@ extension RandomAccessCollection {
   }
 }
 
+extension Double {
+  var formatNumber: String {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 1
+    formatter.minimumFractionDigits = 0  // 必要に応じて0を表示しない
+    formatter.roundingMode = .halfUp
+
+    let rounded = (self * 10).rounded() / 10
+    return formatter.string(from: NSNumber(value: rounded))!
+  }
+}
+// 使用例
+// var str1 = 1.234.formatNumber  // "1.2"
+// str1 = 2.04.formatNumber // 2
+// str1 = 3000.0.formatNumber // 3,000
+
+
+
 // print(Date(dateString: "2024-01-10") as Any)
 
 //public extension Date {
