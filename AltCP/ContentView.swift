@@ -3,8 +3,8 @@ import NWer
 import SwiftUI
 
 struct ContentView: View {
+//  @State var sels: String = "0000"
   @AppStorage("foo") var sels: String = "0000"
-//  @State var sels: [String] = ["1301"]
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   var body: some View {
     VStack(spacing: 0.0) {
@@ -122,7 +122,7 @@ extension ChartView3 {
             d: \(d) v: \(v) ch: \(String(format: "%5.2f", ch))%
             o: \(o) h: \(h) l: \(l) c: \(cl)
             """
-          // fix wrong volume
+          // fix wrong volume, not amended using adj rate
         } else {
           return ""
         }
@@ -248,6 +248,14 @@ extension ChartView3 {
     HStack {
       Spacer()
       TextField("code or name", text: txt).font(.title3)
+        .onSubmit {
+          print("press Enter: \(txt.wrappedValue)")
+          if !items.isEmpty {
+            c.ticker =
+            items[0].components(separatedBy: ":").first ?? ""
+          }
+          isShown = false
+        }
       Spacer()
       Button {
         self.txt = ""

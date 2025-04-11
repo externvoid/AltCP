@@ -1,4 +1,10 @@
-📅2024/10/05St
+📅2025/04/10Th
+TODO:
+1. adj補正(split/merge補正)が行われる場所?▶️queryHist@Networker
+2. OHLCVの中で補正が行われるのはO, H, L, V(C以外)
+3. 銘柄選択popupにてEnterで閉じる▶️TextBoxに検索結果が1件の場合Enterで閉じれば良い
+
+📅2024/10/6St
 in AppStorage
 1. onChangeでのみNetworkerを呼ぶ様に改良
 2. isLoadingを廃止

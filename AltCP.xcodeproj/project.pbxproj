@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		87652C552CAB891E00942B11 /* NWer in Frameworks */ = {isa = PBXBuildFile; productRef = 87652C542CAB891E00942B11 /* NWer */; };
 		87652D092CAEB40900942B11 /* Defaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87652D082CAEB40900942B11 /* Defaults+.swift */; };
+		87919B082DA6886C00C58298 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 87919AF32DA6886C00C58298 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		87652C3D2CAB87A900942B11 /* AltCP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AltCP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87652D082CAEB40900942B11 /* Defaults+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+.swift"; sourceTree = "<group>"; };
+		87919AF32DA6886C00C58298 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				87652D082CAEB40900942B11 /* Defaults+.swift */,
+				87919AF32DA6886C00C58298 /* README.md */,
 				87652C3F2CAB87A900942B11 /* AltCP */,
 				87652C3E2CAB87A900942B11 /* Products */,
 			);
@@ -121,6 +124,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87919B082DA6886C00C58298 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
