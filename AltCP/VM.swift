@@ -41,8 +41,13 @@ public class VM: ObservableObject {
       print("--- didSet ticker: \(ticker)---")
       Task {
         if typ == .dy {
-          dy = try! await Networker.queryHist(
-            ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
+          do {
+            dy = try await Networker.queryHist(
+              ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
+          } catch {
+            ticker = prevTicker
+            print("Error at didSet ticker: \(error)")
+          }
 //          ar = dy
           ar = Array(dy.suffix(limit))
         } else if typ == .wk {
