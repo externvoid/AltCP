@@ -6,10 +6,25 @@ struct ContentView: View {
 //  @State var sels: String = "0000"
   @AppStorage("foo") var sels: String = "0000"
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
+  @State var codes: [[String]] = []
   var body: some View {
     VStack(spacing: 0.0) {
-      ChartView3(selected: sels)
+      ChartView3(selected: sels, codes: $codes)
 //      ChartView3(selected: $sels[0])
+      ChartView3(selected: "1301", codes: $codes)
+    }
+    .task {
+      print("codes.count@ContentView: \(codes.count)")
+      if codes.isEmpty {
+        do {
+          codes = try await Networker.queryCodeTbl(
+            DBPath.dbPath(1),
+            DBPath.dbPath(2))
+          print("ContentView: \(codes.count)")
+        } catch {
+          print("error@ContentView: \(error)")
+        }
+      }
     }
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
@@ -25,10 +40,12 @@ struct ChartView3: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
-   init(selected: String) {
+  init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
+     _codes = codes
    }
-  @State var codes: [[String]] = []
+  @Binding var codes: [[String]]// = []
+//  @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
   @State var isLoading: Bool = false
@@ -59,15 +76,19 @@ struct ChartView3: View {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
 //      c.ticker = selected
     }
-    .task {
-      print("task: \(codes.count)")
-      if codes.isEmpty {
-        codes = try! await Networker.queryCodeTbl(
-          DBPath.dbPath(1),
-          DBPath.dbPath(2))
-        print("task: \(codes.count)")
-      }
-    }
+//    .task {
+//      print("codes.count@task: \(codes.count)")
+//      if codes.isEmpty {
+//        do {
+//          codes = try await Networker.queryCodeTbl(
+//            DBPath.dbPath(1),
+//            DBPath.dbPath(2))
+//          print("task: \(codes.count)")
+//        } catch {
+//          print("error@task: \(error)")
+//        }
+//      }
+//    }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
@@ -312,7 +333,7 @@ extension ChartView3 {
 #Preview {
   ContentView()
     .navigationTitle("ooPs")
-    .frame(width: 420, height: 360)
+    .frame(width: 420, height: 360*1)
 //    .frame(width: 200, height: 200)
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)

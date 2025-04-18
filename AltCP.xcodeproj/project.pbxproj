@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		87652C552CAB891E00942B11 /* NWer in Frameworks */ = {isa = PBXBuildFile; productRef = 87652C542CAB891E00942B11 /* NWer */; };
-		87652D092CAEB40900942B11 /* Defaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87652D082CAEB40900942B11 /* Defaults+.swift */; };
 		87919B082DA6886C00C58298 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 87919AF32DA6886C00C58298 /* README.md */; };
+		8791A44E2DAFD7C100C58298 /* NWer in Frameworks */ = {isa = PBXBuildFile; productRef = 8791A44D2DAFD7C100C58298 /* NWer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		87652C3D2CAB87A900942B11 /* AltCP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AltCP.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		87652D082CAEB40900942B11 /* Defaults+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults+.swift"; sourceTree = "<group>"; };
 		87919AF32DA6886C00C58298 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -31,7 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87652C552CAB891E00942B11 /* NWer in Frameworks */,
+				8791A44E2DAFD7C100C58298 /* NWer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,7 +39,6 @@
 		87652C342CAB87A900942B11 = {
 			isa = PBXGroup;
 			children = (
-				87652D082CAEB40900942B11 /* Defaults+.swift */,
 				87919AF32DA6886C00C58298 /* README.md */,
 				87652C3F2CAB87A900942B11 /* AltCP */,
 				87652C3E2CAB87A900942B11 /* Products */,
@@ -76,7 +73,7 @@
 			);
 			name = AltCP;
 			packageProductDependencies = (
-				87652C542CAB891E00942B11 /* NWer */,
+				8791A44D2DAFD7C100C58298 /* NWer */,
 			);
 			productName = AltCP;
 			productReference = 87652C3D2CAB87A900942B11 /* AltCP.app */;
@@ -107,7 +104,7 @@
 			mainGroup = 87652C342CAB87A900942B11;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				87652C532CAB891E00942B11 /* XCRemoteSwiftPackageReference "NWer" */,
+				8791A44C2DAFD7C100C58298 /* XCRemoteSwiftPackageReference "NWer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 87652C3E2CAB87A900942B11 /* Products */;
@@ -135,7 +132,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87652D092CAEB40900942B11 /* Defaults+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +344,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		87652C532CAB891E00942B11 /* XCRemoteSwiftPackageReference "NWer" */ = {
+		8791A44C2DAFD7C100C58298 /* XCRemoteSwiftPackageReference "NWer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = /Users/tanaka/Documents/SwiftUI_app/NWer;
 			requirement = {
@@ -359,9 +355,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		87652C542CAB891E00942B11 /* NWer */ = {
+		8791A44D2DAFD7C100C58298 /* NWer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 87652C532CAB891E00942B11 /* XCRemoteSwiftPackageReference "NWer" */;
+			package = 8791A44C2DAFD7C100C58298 /* XCRemoteSwiftPackageReference "NWer" */;
 			productName = NWer;
 		};
 /* End XCSwiftPackageProductDependency section */

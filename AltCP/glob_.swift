@@ -136,3 +136,8 @@ extension Array {
 // heightを与えて..., e/quoteH * height, quote: 取引値、
 // heightを与えず..., e - min /quoteH, quote: 取引値、
 // quoteH = max - min
+
+// 2025-04-18Fr
+import SwiftUI
+let columns: [GridItem]
+= [GridItem(.adaptive(minimum: 100, maximum: .infinity), spacing: 5)]
