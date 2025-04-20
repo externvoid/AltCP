@@ -139,5 +139,86 @@ extension Array {
 
 // 2025-04-18Fr
 import SwiftUI
+// Adaptive GridItem
 let columns: [GridItem]
-= [GridItem(.adaptive(minimum: 100, maximum: .infinity), spacing: 5)]
+= [GridItem(.adaptive(minimum: 200, maximum: .infinity), spacing: 5)]
+
+//codes.countContentView: 3970
+
+//["1711", "(株)ＳＤＳホールディングス", "東証STD", "時価総額2,190百万円", "【特色】省エネ施設の設計・施工で再建図る。太陽光発電事業は大型から自家消費型の施工販売へ転換", "建設業"]
+//  [Swiftでキューを理解する #Swift - Qiita](https://qiita.com/katopan/items/987ae34ef6fe94782f81)
+//  Created by Tanaka Hiroshi on 2025/04/13.
+//
+
+
+struct Queue<T: Equatable> {
+  var ar: [T]
+  var maxSize: Int// = 5
+
+  mutating func append(_ element: T) {
+    // Prevent appending duplicate elements.
+    if let n = ar.firstIndex(of: element) {
+      ar.remove(at: n)
+    }
+    // If the queue is at max size, remove the first element
+    if ar.count == maxSize {
+      ar.removeFirst()
+    }
+    // Append the new element
+    ar.append(element)
+  }
+
+  mutating func removeFirst() -> T? {
+    return ar.isEmpty ? nil : ar.removeFirst()
+  }
+
+  func peek() -> T? {
+    return ar.first
+  }
+
+  var count: Int {
+    return ar.count
+  }
+
+  var isEmpty: Bool {
+    return ar.isEmpty
+  }
+}
+//var queueOfAnimals = Queue(ar: ["🐺", "🐵", "🐑", "🐶", "🐍"], maxSize: 5)
+//末尾に入れる
+//queueOfAnimals.enqueue("🐯")
+//先頭を取り除く
+//queueOfAnimals.dequeue()
+
+//🔹 === Global func ===
+// キューに変換する
+let MAXSIZE: Int = 4
+
+func str2Que(_ str: String) -> Queue<String> {
+  var queue = Queue<String>(ar: [], maxSize: MAXSIZE)
+  str.components(separatedBy: ",")
+    .map { $0.trimmingCharacters(in: .whitespaces) }
+    .forEach { e in
+      queue.append(e)
+    }
+  if queue.count < MAXSIZE {
+    for _ in 0..<(MAXSIZE - queue.count) { queue.ar.append("0000") }
+  } else if queue.count > MAXSIZE {
+    for _ in 0..<(str.components(separatedBy: ",").count - MAXSIZE) {
+      queue.ar.removeFirst()
+    }
+  }
+  return queue
+}
+// makeLimitedCodesContaingStr
+func makeLimitedCodesContaingStr(_ selStr: String) -> String {
+  if selStr.components(separatedBy: ",").count > MAXSIZE {
+    var br = selStr.components(separatedBy: ",")
+    for _ in 0..<(br.count - MAXSIZE) {
+      br.removeFirst()
+    }
+    return br.joined(separator: ",")
+  } else {
+    return selStr
+  }
+}

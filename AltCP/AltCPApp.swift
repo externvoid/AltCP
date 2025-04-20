@@ -6,10 +6,13 @@ struct AltCPApp: App {
   var appState: AppState = .init()
     var body: some Scene {
         WindowGroup() {
-//          WindowGroup("ChartPlot") {
-            ContentView()
+          #if DEBUG
+          let _ = print("\n <--- Start App ---\n")
+          #endif
+          //        WindowGroup("ChartPlot") {
+          ContentView()
 //            .navigationTitle("ChartPlot")
-            .frame(minWidth: 500, minHeight: 400)
+          .frame(minWidth: 500, minHeight: 400)
         }
         .environmentObject(appState)
 //        .windowStyle(HiddenTitleBarWindowStyle())

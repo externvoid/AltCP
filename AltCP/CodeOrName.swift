@@ -40,21 +40,3 @@ extension ChartView3 {
     }
   }
 } // extention
-
-//struct ContentView0: View {  // for playground
-//  //  @State var txt: String = ""
-//  @State var code: String = ""
-//  @StateObject var c: VM = .init()  // Candle is in Sources
-//  var body: some View {
-//    popUp2
-//  }
-//}
-#Preview {
-  @Previewable @State var sels: String = "0000"
-  VStack(spacing: 0.0) {
-    ChartView3(selected: sels, codes: .constant([["0000"]]))
-      .frame(width: 400 , height: 260)
-    //      ChartView3(selected: $sels[0])
-  }
-  .padding(.all, 3)
-}

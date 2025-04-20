@@ -4,23 +4,33 @@ import SwiftUI
 
 struct ContentView: View {
 //  @State var sels: String = "0000"
-  @AppStorage("foo") var sels: String = "0000"
+  @AppStorage("foo") var selStr: String = "0000,6952,9432,1301,130A"
+  var sels: Queue<String> { str2Que(selStr) }
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   @State var codes: [[String]] = []
   var body: some View {
+    HStack {
     VStack(spacing: 0.0) {
-      ChartView3(selected: sels, codes: $codes)
-//      ChartView3(selected: $sels[0])
-      ChartView3(selected: "1301", codes: $codes)
+      let _ = print("selStr: \(selStr)")
+      let _ = print("sels: \(sels.ar.count)")
+//      ChartView3(selected: "0000", codes: $codes)
+      ChartView3(selected: sels.ar[0], codes: $codes)
+                  .padding(.bottom, 2)
+        ChartView3(selected: sels.ar[1], codes: $codes)
+      }
+      VStack(spacing: 0.0) {
+        ChartView3(selected: sels.ar[2], codes: $codes)
+          .padding(.bottom, 2)
+        ChartView3(selected: sels.ar[3], codes: $codes)
+      }.padding(.all, 2)
     }
     .task {
-      print("codes.count@ContentView: \(codes.count)")
       if codes.isEmpty {
         do {
           codes = try await Networker.queryCodeTbl(
             DBPath.dbPath(1),
             DBPath.dbPath(2))
-          print("ContentView: \(codes.count)")
+          print("codes.countContentView: \(codes.count)")
         } catch {
           print("error@ContentView: \(error)")
         }
@@ -34,17 +44,18 @@ struct ContentView: View {
 /// - Description: plot wrapper
 /// - Parameter selected: ticker code
 struct ChartView3: View {
-//  @EnvironmentObject var appState: AppState  // 無視
+  @AppStorage("foo") var selStr: String = "0000,6952,9432,1301"
+  var sels: Queue<String> { str2Que(selStr) }
   @State var isShown: Bool = false
   @State var hoLoc: CGPoint = .zero
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
+  @Binding var codes: [[String]]//; @Binding var selStr: String
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
    }
-  @Binding var codes: [[String]]// = []
 //  @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
@@ -66,29 +77,21 @@ struct ChartView3: View {
     }  // geo
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      Task {
+//      Task { // This part was moved to ticker@VM
 //        c.ar = try! await Networker.queryHist(
 //          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
 //      }
-      UserDefaults.standard.set(c.ticker, forKey: "foo")
+//      selStr = "0000"
+      selStr += ("," + c.ticker)
+      selStr = makeLimitedCodesContaingStr(selStr)
+
+      UserDefaults.standard.set(selStr, forKey: "foo")
+//      UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
 //      c.ticker = selected
     }
-//    .task {
-//      print("codes.count@task: \(codes.count)")
-//      if codes.isEmpty {
-//        do {
-//          codes = try await Networker.queryCodeTbl(
-//            DBPath.dbPath(1),
-//            DBPath.dbPath(2))
-//          print("task: \(codes.count)")
-//        } catch {
-//          print("error@task: \(error)")
-//        }
-//      }
-//    }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
