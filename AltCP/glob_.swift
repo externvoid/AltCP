@@ -141,7 +141,7 @@ extension Array {
 import SwiftUI
 // Adaptive GridItem
 let columns: [GridItem]
-= [GridItem(.adaptive(minimum: 200, maximum: .infinity), spacing: 5)]
+= [GridItem(.adaptive(minimum: CHARTWIDTH, maximum: .infinity), spacing: 5)]
 
 //codes.countContentView: 3970
 
@@ -190,9 +190,10 @@ struct Queue<T: Equatable> {
 //先頭を取り除く
 //queueOfAnimals.dequeue()
 
-//🔹 === Global func ===
+//🔹 === Global func and Constant ===
+let CHARTWIDTH: Double = 400
+let MAXSIZE: Int = 20
 // キューに変換する
-let MAXSIZE: Int = 4
 
 func str2Que(_ str: String) -> Queue<String> {
   var queue = Queue<String>(ar: [], maxSize: MAXSIZE)

@@ -9,20 +9,18 @@ struct ContentView: View {
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   @State var codes: [[String]] = []
   var body: some View {
-    HStack {
-    VStack(spacing: 0.0) {
-      let _ = print("selStr: \(selStr)")
-      let _ = print("sels: \(sels.ar.count)")
-//      ChartView3(selected: "0000", codes: $codes)
-      ChartView3(selected: sels.ar[0], codes: $codes)
-                  .padding(.bottom, 2)
-        ChartView3(selected: sels.ar[1], codes: $codes)
+    let _ = print("selStr: \(selStr)")
+    let _ = print("sels: \(sels.count)")
+    ScrollView(.vertical) {
+      LazyVGrid(columns: columns, spacing: 10) {
+//        ForEach(0..<4) { i in
+        ForEach(sels.ar, id: \.self) {selected in
+//          ForEach(0..<sels.count) { i in
+          ChartView3(selected: selected, codes: $codes)
+              .frame(height: CHARTWIDTH*0.75)
+            .padding(5)
+        }
       }
-      VStack(spacing: 0.0) {
-        ChartView3(selected: sels.ar[2], codes: $codes)
-          .padding(.bottom, 2)
-        ChartView3(selected: sels.ar[3], codes: $codes)
-      }.padding(.all, 2)
     }
     .task {
       if codes.isEmpty {
