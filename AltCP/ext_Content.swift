@@ -11,7 +11,7 @@
 // MARK: chart
 import SwiftUI
 
-extension ChartView3 {
+extension StockView {
   @ViewBuilder
   func chart(fsize: CGSize) -> some View {
 //    let fsize: CGSize = geometry.size
@@ -201,9 +201,9 @@ extension ChartView3 {
 #Preview {
   @Previewable @State var sels: String = "0000"
   VStack(spacing: 0.0) {
-    ChartView3(selected: sels, codes: .constant([["0000"]]) )
+    StockView(selected: sels, codes: .constant([["0000"]]) )
       .frame(width: 400 , height: 260)
-    //      ChartView3(selected: $sels[0])
+    //      StockView(selected: $sels[0])
   }
   .padding(.all, 3)
 }

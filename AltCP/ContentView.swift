@@ -3,20 +3,20 @@ import NWer
 import SwiftUI
 
 struct ContentView: View {
+//  @State var selStr: String = "0000,6952,9432,1301,130A"
 //  @State var sels: String = "0000"
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301,130A"
   var sels: Queue<String> { str2Que(selStr) }
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   @State var codes: [[String]] = []
   var body: some View {
-    let _ = print("selStr: \(selStr)")
-    let _ = print("sels: \(sels.count)")
+    let _ = print("selStr: \(selStr)"); let _ = print("sels: \(sels.count)")
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
 //        ForEach(0..<4) { i in
         ForEach(sels.ar, id: \.self) {selected in
 //          ForEach(0..<sels.count) { i in
-          ChartView3(selected: selected, codes: $codes)
+          StockView(selected: selected, codes: $codes)
               .frame(height: CHARTWIDTH*0.75)
             .padding(5)
         }
@@ -39,9 +39,10 @@ struct ContentView: View {
   }
 }
 
+// MARK: StockView
 /// - Description: plot wrapper
 /// - Parameter selected: ticker code
-struct ChartView3: View {
+struct StockView: View {
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301"
   var sels: Queue<String> { str2Que(selStr) }
   @State var isShown: Bool = false
@@ -79,8 +80,8 @@ struct ChartView3: View {
 //        c.ar = try! await Networker.queryHist(
 //          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
 //      }
-//      selStr = "0000"
-      selStr += ("," + c.ticker)
+//      let _ = selStr = "0000,6952,9432,1301,130A"
+      if selStr.isEmpty { selStr = c.ticker } else { selStr += ("," + c.ticker) }
       selStr = makeLimitedCodesContaingStr(selStr)
 
       UserDefaults.standard.set(selStr, forKey: "foo")
@@ -98,7 +99,7 @@ struct ChartView3: View {
     .navigationTitle(c.ticker)
   }  // body
 }  // View
-extension ChartView3 {
+extension StockView {
 // MARK: plot
   func plot(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
@@ -183,7 +184,7 @@ struct CursorLine: Shape {
 }
 
 // MARK: extension
-extension ChartView3 {
+extension StockView {
   @ViewBuilder
   var btn: some View {
     Button(

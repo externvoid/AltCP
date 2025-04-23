@@ -197,13 +197,17 @@ let MAXSIZE: Int = 20
 
 func str2Que(_ str: String) -> Queue<String> {
   var queue = Queue<String>(ar: [], maxSize: MAXSIZE)
+  if str.isEmpty { queue.append("0000"); return queue }
   str.components(separatedBy: ",")
     .map { $0.trimmingCharacters(in: .whitespaces) }
+    .filter { !$0.isEmpty }
     .forEach { e in
       queue.append(e)
     }
-  if queue.count < MAXSIZE {
-    for _ in 0..<(MAXSIZE - queue.count) { queue.ar.append("0000") }
+//  if queue.count < MAXSIZE {
+//    for _ in 0..<(MAXSIZE - queue.count) { queue.ar.append("0000") }
+  if queue.isEmpty {
+    queue.append("0000")
   } else if queue.count > MAXSIZE {
     for _ in 0..<(str.components(separatedBy: ",").count - MAXSIZE) {
       queue.ar.removeFirst()

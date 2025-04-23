@@ -2,7 +2,7 @@
 import SwiftUI
 
 // MARK: CodeOrNameView
-extension ChartView3 {
+extension StockView {
   // MARK: - codeOrNameView
   var popUp2: some View {
 
