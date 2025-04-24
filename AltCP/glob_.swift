@@ -193,6 +193,9 @@ struct Queue<T: Equatable> {
 //🔹 === Global func and Constant ===
 let CHARTWIDTH: Double = 400
 let MAXSIZE: Int = 20
+let CANNUMSMA: Int = 90
+let CANNUMMID: Int = 120
+let CANNUMLAR: Int = 150
 // キューに変換する
 
 func str2Que(_ str: String) -> Queue<String> {

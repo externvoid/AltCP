@@ -9,11 +9,48 @@
 /* Begin PBXBuildFile section */
 		87919B082DA6886C00C58298 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 87919AF32DA6886C00C58298 /* README.md */; };
 		8791A44E2DAFD7C100C58298 /* NWer in Frameworks */ = {isa = PBXBuildFile; productRef = 8791A44D2DAFD7C100C58298 /* NWer */; };
+		879469302DB783F600957C34 /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692A2DB783F600957C34 /* ListItemView.swift */; };
+		879469312DB783F600957C34 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469202DB783F600957C34 /* AppState.swift */; };
+		879469322DB783F600957C34 /* ext_VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469282DB783F600957C34 /* ext_VM.swift */; };
+		879469332DB783F600957C34 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692E2DB783F600957C34 /* VM.swift */; };
+		879469342DB783F600957C34 /* CodeOrName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469232DB783F600957C34 /* CodeOrName.swift */; };
+		879469352DB783F600957C34 /* DBPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469252DB783F600957C34 /* DBPath.swift */; };
+		879469362DB783F600957C34 /* PlotWrapper2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692C2DB783F600957C34 /* PlotWrapper2.swift */; };
+		879469372DB783F600957C34 /* mod_ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692B2DB783F600957C34 /* mod_ContentView.swift */; };
+		879469382DB783F600957C34 /* glob_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469292DB783F600957C34 /* glob_.swift */; };
+		879469392DB783F600957C34 /* AltCPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794691F2DB783F600957C34 /* AltCPApp.swift */; };
+		8794693A2DB783F600957C34 /* ext_Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469272DB783F600957C34 /* ext_Content.swift */; };
+		8794693B2DB783F600957C34 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469242DB783F600957C34 /* ContentView.swift */; };
+		8794693C2DB783F600957C34 /* _Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8794691D2DB783F600957C34 /* _Config.xcconfig */; };
+		8794693D2DB783F600957C34 /* version.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8794692D2DB783F600957C34 /* version.sh */; };
+		8794693E2DB783F600957C34 /* build.sh in Resources */ = {isa = PBXBuildFile; fileRef = 879469222DB783F600957C34 /* build.sh */; };
+		8794693F2DB783F600957C34 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8794691B2DB783F600957C34 /* Preview Assets.xcassets */; };
+		879469402DB783F600957C34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 879469212DB783F600957C34 /* Assets.xcassets */; };
+		879469412DB783F600957C34 /* diployDB.sh in Resources */ = {isa = PBXBuildFile; fileRef = 879469262DB783F600957C34 /* diployDB.sh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		87652C3D2CAB87A900942B11 /* AltCP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AltCP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87919AF32DA6886C00C58298 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		8794691B2DB783F600957C34 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8794691D2DB783F600957C34 /* _Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = _Config.xcconfig; sourceTree = "<group>"; };
+		8794691E2DB783F600957C34 /* AltCP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AltCP.entitlements; sourceTree = "<group>"; };
+		8794691F2DB783F600957C34 /* AltCPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltCPApp.swift; sourceTree = "<group>"; };
+		879469202DB783F600957C34 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		879469212DB783F600957C34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		879469222DB783F600957C34 /* build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
+		879469232DB783F600957C34 /* CodeOrName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeOrName.swift; sourceTree = "<group>"; };
+		879469242DB783F600957C34 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		879469252DB783F600957C34 /* DBPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBPath.swift; sourceTree = "<group>"; };
+		879469262DB783F600957C34 /* diployDB.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = diployDB.sh; sourceTree = "<group>"; };
+		879469272DB783F600957C34 /* ext_Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ext_Content.swift; sourceTree = "<group>"; };
+		879469282DB783F600957C34 /* ext_VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ext_VM.swift; sourceTree = "<group>"; };
+		879469292DB783F600957C34 /* glob_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glob_.swift; sourceTree = "<group>"; };
+		8794692A2DB783F600957C34 /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
+		8794692B2DB783F600957C34 /* mod_ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mod_ContentView.swift; sourceTree = "<group>"; };
+		8794692C2DB783F600957C34 /* PlotWrapper2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotWrapper2.swift; sourceTree = "<group>"; };
+		8794692D2DB783F600957C34 /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = version.sh; sourceTree = "<group>"; };
+		8794692E2DB783F600957C34 /* VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -42,6 +79,7 @@
 				87919AF32DA6886C00C58298 /* README.md */,
 				87652C3F2CAB87A900942B11 /* AltCP */,
 				87652C3E2CAB87A900942B11 /* Products */,
+				8794692F2DB783F600957C34 /* AltCP */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,6 +89,40 @@
 				87652C3D2CAB87A900942B11 /* AltCP.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8794691C2DB783F600957C34 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8794691B2DB783F600957C34 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8794692F2DB783F600957C34 /* AltCP */ = {
+			isa = PBXGroup;
+			children = (
+				8794691C2DB783F600957C34 /* Preview Content */,
+				8794691D2DB783F600957C34 /* _Config.xcconfig */,
+				8794691E2DB783F600957C34 /* AltCP.entitlements */,
+				8794691F2DB783F600957C34 /* AltCPApp.swift */,
+				879469202DB783F600957C34 /* AppState.swift */,
+				879469212DB783F600957C34 /* Assets.xcassets */,
+				879469222DB783F600957C34 /* build.sh */,
+				879469232DB783F600957C34 /* CodeOrName.swift */,
+				879469242DB783F600957C34 /* ContentView.swift */,
+				879469252DB783F600957C34 /* DBPath.swift */,
+				879469262DB783F600957C34 /* diployDB.sh */,
+				879469272DB783F600957C34 /* ext_Content.swift */,
+				879469282DB783F600957C34 /* ext_VM.swift */,
+				879469292DB783F600957C34 /* glob_.swift */,
+				8794692A2DB783F600957C34 /* ListItemView.swift */,
+				8794692B2DB783F600957C34 /* mod_ContentView.swift */,
+				8794692C2DB783F600957C34 /* PlotWrapper2.swift */,
+				8794692D2DB783F600957C34 /* version.sh */,
+				8794692E2DB783F600957C34 /* VM.swift */,
+			);
+			path = AltCP;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +194,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				87919B082DA6886C00C58298 /* README.md in Resources */,
+				8794693C2DB783F600957C34 /* _Config.xcconfig in Resources */,
+				8794693D2DB783F600957C34 /* version.sh in Resources */,
+				8794693E2DB783F600957C34 /* build.sh in Resources */,
+				8794693F2DB783F600957C34 /* Preview Assets.xcassets in Resources */,
+				879469402DB783F600957C34 /* Assets.xcassets in Resources */,
+				879469412DB783F600957C34 /* diployDB.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +210,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				879469302DB783F600957C34 /* ListItemView.swift in Sources */,
+				879469312DB783F600957C34 /* AppState.swift in Sources */,
+				879469322DB783F600957C34 /* ext_VM.swift in Sources */,
+				879469332DB783F600957C34 /* VM.swift in Sources */,
+				879469342DB783F600957C34 /* CodeOrName.swift in Sources */,
+				879469352DB783F600957C34 /* DBPath.swift in Sources */,
+				879469362DB783F600957C34 /* PlotWrapper2.swift in Sources */,
+				879469372DB783F600957C34 /* mod_ContentView.swift in Sources */,
+				879469382DB783F600957C34 /* glob_.swift in Sources */,
+				879469392DB783F600957C34 /* AltCPApp.swift in Sources */,
+				8794693A2DB783F600957C34 /* ext_Content.swift in Sources */,
+				8794693B2DB783F600957C34 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,8 +350,7 @@
 		};
 		87652C4D2CAB87AA00942B11 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 87652C3F2CAB87A900942B11 /* AltCP */;
-			baseConfigurationReferenceRelativePath = _Config.xcconfig;
+			baseConfigurationReference = 8794691D2DB783F600957C34 /* _Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

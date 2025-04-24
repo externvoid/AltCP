@@ -22,9 +22,10 @@ struct ContentView: View {
             .padding(5)
         }
       }
-    }
-    //    .modifier(TitleBarMnu(limit: $c.limit))
-    //    .modifier(TitleBarBtn(typ: $c.typ))
+    } // ScrollView
+    .modifier(TitleBarMnu(limit: $env.limit))
+    .modifier(TitleBarBtn(typ: $env.typ))
+    .navigationTitle("multi mode")
     .task {
       if codes.isEmpty {
         do {
@@ -54,6 +55,7 @@ struct StockView: View {
 
   @StateObject var c: VM
   @Binding var codes: [[String]]//; @Binding var selStr: String
+  @EnvironmentObject var env: AppState
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
@@ -90,6 +92,8 @@ struct StockView: View {
       UserDefaults.standard.set(selStr, forKey: "foo")
 //      UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
+    .onChange(of: env.typ) { c.typ = env.typ }
+    .onChange(of: env.limit) { c.limit = env.limit }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
 //      c.ticker = selected
@@ -97,9 +101,9 @@ struct StockView: View {
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
-    .modifier(TitleBarMnu(limit: $c.limit))
-    .modifier(TitleBarBtn(typ: $c.typ))
-    .navigationTitle(c.ticker)
+//    .modifier(TitleBarMnu(limit: $c.limit))
+//    .modifier(TitleBarBtn(typ: $c.typ))
+//    .navigationTitle(c.ticker)
   }  // body
 }  // View
 extension StockView {

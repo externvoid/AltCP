@@ -22,7 +22,7 @@ public class VM: ObservableObject {
   var dy:[candle] = []
   var prevTicker: String = ""
   var prevTyp: Typ = .dy
-  @Published var limit: Int = 90
+  @Published var limit: Int = CANNUMSMA
   {
     didSet {
       switch typ {

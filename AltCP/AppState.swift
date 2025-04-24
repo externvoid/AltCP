@@ -6,4 +6,5 @@ import Foundation
 
 class AppState: ObservableObject {
   @Published var typ: Typ = .dy
+  @Published var limit: Int = CANNUMSMA
 }
