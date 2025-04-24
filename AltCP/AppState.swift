@@ -5,5 +5,5 @@
 import Foundation
 
 class AppState: ObservableObject {
-  @Published var isShown: Bool = false
+  @Published var typ: Typ = .dy
 }

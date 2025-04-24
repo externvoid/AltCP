@@ -9,6 +9,7 @@ struct ContentView: View {
   var sels: Queue<String> { str2Que(selStr) }
   //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   @State var codes: [[String]] = []
+  @EnvironmentObject var env: AppState
   var body: some View {
     let _ = print("selStr: \(selStr)"); let _ = print("sels: \(sels.count)")
     ScrollView(.vertical) {
@@ -22,6 +23,8 @@ struct ContentView: View {
         }
       }
     }
+    //    .modifier(TitleBarMnu(limit: $c.limit))
+    //    .modifier(TitleBarBtn(typ: $c.typ))
     .task {
       if codes.isEmpty {
         do {
