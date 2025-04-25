@@ -2,4 +2,4 @@
 AltCP.xcodeproj/xcuserdata/*
 AltCP.xcodeproj/xcuserdata/
 build/
-Config.xcconfig
+_Config.xcconfig

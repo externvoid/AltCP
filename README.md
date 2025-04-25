@@ -9,6 +9,7 @@ onTapGestureでFocusが当たっているViewを判定出来る。Focusが外れ
 1. MiniMap: cmd-N
 2. find Selected Text: opt-H
 3. find Selected Symbol: cmd-H
+4. reveal in Navigator Pane: sft-cmd-J
 
 TODO: コメントを厳選 Carefully select comments
 

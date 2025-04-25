@@ -7,13 +7,24 @@ struct ContentView: View {
   var sels: Queue<String> { str2Que(selStr) }
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
+  @State var selection: String? = nil
   var body: some View {
-    let _ = print("selStr: \(selStr)"); let _ = print("sels: \(sels.count)")
+    if let text = selection {
+      singlePlot(text)
+    } else {
+      multiPlot()
+    }
+  }
+  //
+  private func multiPlot() -> some View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
-        ForEach(sels.ar, id: \.self) {selected in
-          StockView(selected: selected, codes: $codes)
-              .frame(height: CHARTWIDTH*0.75)
+        ForEach(sels.ar, id: \.self) {e in
+          StockView(selected: e, codes: $codes)
+            .onLongPressGesture {
+              selection = e
+            }
+            .frame(height: CHARTWIDTH*0.75)
             .padding(5)
         }
       }
@@ -36,7 +47,31 @@ struct ContentView: View {
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
+  private func singlePlot(_ text: String) -> some View {
+    StockView(selected: text, codes: $codes)
+      .onLongPressGesture {
+        selection = nil
+      }
+      .modifier(TitleBarMnu(limit: $env.limit))
+      .modifier(TitleBarBtn(typ: $env.typ))
+      .navigationTitle(env.titleBar)
+      .task {
+        if codes.isEmpty {
+          do {
+            codes = try await Networker.queryCodeTbl(
+              DBPath.dbPath(1),
+              DBPath.dbPath(2))
+            print("codes.countContentView: \(codes.count)")
+          } catch {
+            print("error@ContentView: \(error)")
+          }
+        }
+      }
+      .padding(.bottom, 4.5)
+      .padding([.top, .leading, .trailing], 3)
+  }
 }
+//let _ = print("selStr: \(selStr)"); let _ = print("sels: \(sels.count)")
 
 // MARK: StockView
 /// - Description: chart wrapper
