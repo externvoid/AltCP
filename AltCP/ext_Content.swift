@@ -1,19 +1,11 @@
-//
-//  ext_Content.swift
-//  AltCP
-//
 //  Created by Tanaka Hiroshi on 2024/10/01.
-//
-
-
 //  Created by Tanaka Hiroshi on 2024/09/26.
-
-// MARK: chart
+// MARK: candle
 import SwiftUI
 
 extension StockView {
   @ViewBuilder
-  func chart(fsize: CGSize) -> some View {
+  func candle(fsize: CGSize) -> some View {
 //    let fsize: CGSize = geometry.size
     ZStack(alignment: .bottom) {
       VStack(spacing: 0.0) {//, content: <#T##() -> View#>) {
@@ -35,7 +27,7 @@ extension StockView {
       }.frame(width: fsize.width, height: 20, alignment: .bottom)
               .offset(y: 04)
     }  // Z
-  }  // chart
+  }  // candle
 /// - Description: Addressed missing Volume Graph
   func volumes(_ ctx: GraphicsContext, _ size: CGSize) {
     //  let h = size.height
@@ -188,15 +180,6 @@ extension StockView {
     ctx.stroke(ps.applying(mt0).applying(mtx), with: .color(.blue))
   }
 }
-
-//struct ContentView0: View {  // for playground
-//  //  @State var txt: String = ""
-//  @State var code: String = ""
-//  @StateObject var c: VM = .init()  // Candle is in Sources
-//  var body: some View {
-//    popUp2
-//  }
-//}
 
 #Preview {
   @Previewable @State var sels: String = "0000"

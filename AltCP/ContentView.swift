@@ -1,22 +1,17 @@
-import NWer
 //  Created by Tanaka Hiroshi on 2024/10/01.
+import NWer
 import SwiftUI
 
 struct ContentView: View {
-//  @State var selStr: String = "0000,6952,9432,1301,130A"
-//  @State var sels: String = "0000"
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301,130A"
   var sels: Queue<String> { str2Que(selStr) }
-  //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
   var body: some View {
     let _ = print("selStr: \(selStr)"); let _ = print("sels: \(sels.count)")
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
-//        ForEach(0..<4) { i in
         ForEach(sels.ar, id: \.self) {selected in
-//          ForEach(0..<sels.count) { i in
           StockView(selected: selected, codes: $codes)
               .frame(height: CHARTWIDTH*0.75)
             .padding(5)
@@ -25,7 +20,6 @@ struct ContentView: View {
     } // ScrollView
     .modifier(TitleBarMnu(limit: $env.limit))
     .modifier(TitleBarBtn(typ: $env.typ))
-//    .navigationTitle("multi mode")
     .navigationTitle(env.titleBar)
     .task {
       if codes.isEmpty {
@@ -45,7 +39,7 @@ struct ContentView: View {
 }
 
 // MARK: StockView
-/// - Description: plot wrapper
+/// - Description: chart wrapper
 /// - Parameter selected: ticker code
 struct StockView: View {
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301"
@@ -55,21 +49,18 @@ struct StockView: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
-  @Binding var codes: [[String]]//; @Binding var selStr: String
+  @Binding var codes: [[String]]
   @EnvironmentObject var env: AppState
   @State var titleBar: String = ""
-//  @FocusState var focusItem: String?
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
    }
-//  @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
   @State var isLoading: Bool = false
   var allItems: [String] {  // code, company, category
     codes.map { e in e[0] + ": " + e[1] + ": " + e[2] }
-    //    codes.map { e in (e[0] + ": " + e[1] + ": " + e[2]).trimmingCharacters(in: .whitespaces) }
   }
   var items: [String] {
     txt.isEmpty ? allItems : Array(allItems.filter { $0.contains(txt) })
@@ -79,57 +70,48 @@ struct StockView: View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
       if !c.ar.isEmpty {
-        plot(fsize: fsize) // MARK: plot
+        chart(fsize: fsize) // MARK: plot
       }
     }  // geo
     .onTapGesture {
       print("code@onTapGesture: \(c.ticker)"); env.titleBar = c.ticker
     }
-//    .focused($focusItem, equals: c.ticker)
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      Task { // This part was moved to ticker@VM
-//        c.ar = try! await Networker.queryHist(
-//          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-//      }
-//      let _ = selStr = "0000,6952,9432,1301,130A"
       if selStr.isEmpty { selStr = c.ticker } else { selStr += ("," + c.ticker) }
       selStr = makeLimitedCodesContaingStr(selStr)
 
       UserDefaults.standard.set(selStr, forKey: "foo")
-//      UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onChange(of: env.typ) { c.typ = env.typ }
     .onChange(of: env.limit) { c.limit = env.limit }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
-//      c.ticker = selected
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
-//    .modifier(TitleBarMnu(limit: $c.limit))
-//    .modifier(TitleBarBtn(typ: $c.typ))
-//    .navigationTitle(titleBar)
   }  // body
 }  // View
 extension StockView {
-// MARK: plot
-  func plot(fsize: CGSize) -> some View {
+// MARK: chart
+  func chart(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
       CursorLine(hoLoc: hoLoc)
         .stroke(Color.red.opacity(0.3), lineWidth: 1)
         .frame(width: fsize.width)
-      chart(fsize: fsize)
+      candle(fsize: fsize)
         .modifier(OnKeyPress(c: c, codes: codes))
       dateOHLCV(fsize: fsize)
       btn
         .padding([.bottom, .trailing], 3)
     }  //   Z
     .modifier(OnHover(hoLoc: $hoLoc, oldLoc: $oldLoc, fsize: fsize))
-  }  // plot
+  }  // chart
 // - Description
 // MARK: dateOHLCV
+/// - Description: zzz
+/// - Parameter zz
   func dateOHLCV(fsize: CGSize) -> some View {
     VStack(spacing: 0.0) {
       var i: Int {
@@ -140,12 +122,7 @@ extension StockView {
       var str: String {
         if !c.ar.isEmpty {
           let v = c.ar[i].volume.formatNumber
-//          let v = Int(c.ar[i].volume)
           let d = c.ar[i].date
-//          let o = String(format: "%.1f", c.ar[i].open)
-//          let h = String(format: "%.1f", c.ar[i].high)
-//          let l = String(format: "%.1f", c.ar[i].low)
-//          let cl = String(format: "%.1f", c.ar[i].close)
           let o = c.ar[i].open.formatNumber
           let h = c.ar[i].high.formatNumber
           let l = c.ar[i].low.formatNumber
@@ -159,25 +136,18 @@ extension StockView {
             d: \(d) v: \(v) ch: \(String(format: "%5.2f", ch))%
             o: \(o) h: \(h) l: \(l) c: \(cl)
             """
-          // fix wrong volume, not amended using adj rate
         } else {
           return ""
         }
       }
       Spacer()
       HStack {
-        //        Text("hoLoc.x: \(hoLoc.x)")
         Text(str)
-          //        Text("d: \(d) v: \(v)")  // fix wrong volume
           .font(.system(size: 10.5, design: .monospaced))
           .foregroundColor(.yellow.opacity(0.6))
           .offset(y: -12)
         Spacer()
       }
-      //          .offset(x: -fsize.width + 45, y: -fsize.height + 28)
-      //          .border(.green.opacity(0.6), width: 1)
-      //        chart(fsize: hsize)
-      //          .border(.orange.opacity(0.6), width: 1)
     }
   }  // dateOHLCV
 }
@@ -188,16 +158,13 @@ struct CursorLine: Shape {
   var hoLoc: CGPoint
   func path(in rect: CGRect) -> Path {
     var path = Path()
-    //    print("rect.minY: \(rect.minY)")
-    //    print("rect.maxY: \(rect.maxY )")
-    //    print("hoLoc: \(hoLoc)")
     path.move(to: CGPoint(x: hoLoc.x, y: rect.minY))
     path.addLine(to: CGPoint(x: hoLoc.x, y: rect.maxY))
     return path
   }
 }
 
-// MARK: extension
+// MARK: btn, popUp, textBox extension
 extension StockView {
   @ViewBuilder
   var btn: some View {
@@ -207,16 +174,11 @@ extension StockView {
       },
       label: {
         ZStack {
-          //        Color(nsColor: .windowBackgroundColor)
-          //          .frame(width: 60, height: 60)
           Image(systemName: "plus.circle")
             .resizable()
             .frame(width: 30, height: 30)
-            //            .imageScale(.large)
-            //            .foregroundStyle(.tint)
             .foregroundStyle(
               Color(.green.opacity(0.4))
-//              Color(red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3)
             )
             .symbolEffect(.bounce, value: isShown)
         }
@@ -303,7 +265,7 @@ extension StockView {
       }
     }
   }
-
+// MARK: Helper function.
   /// obtain the array of the detailed code related info
   /// - Parameter code
   /// - Returns: [code, name, market, capital, feat, category]

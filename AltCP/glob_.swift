@@ -1,18 +1,7 @@
-//
-//  ext_.swift
-//  AltCP
-//
 //  Created by Tanaka Hiroshi on 2024/10/01.
-//
-
-
 import Foundation
 
 extension Date {
-  //  private static var a: Int { 1 } // 奇妙な挙動に困った
-  //  private static var b: Int = 1
-  // error: extensions must not contain stored properties
-  // var c: Int = 1
   public static let formatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = NSTimeZone.system
@@ -41,6 +30,8 @@ extension Date {
 
 // Created 2024/11/10.
 // MARK: binarySearch usage
+/// - Description: binary Search
+/// - Parameter : closure
 // var r: Int
 // r = ar.binarySearch { $0.date < "2024/06/29" } => "2024/07/01"
 // r = ar.binarySearch { $0[0] < "3320" }
@@ -65,6 +56,10 @@ extension RandomAccessCollection {
   }
 }
 
+// 使用例
+// var str1 = 1.234.formatNumber  // "1.2"
+// str1 = 2.04.formatNumber // 2
+// str1 = 3000.0.formatNumber // 3,000
 extension Double {
   var formatNumber: String {
     let formatter = NumberFormatter()
@@ -77,49 +72,7 @@ extension Double {
     return formatter.string(from: NSNumber(value: rounded))!
   }
 }
-// 使用例
-// var str1 = 1.234.formatNumber  // "1.2"
-// str1 = 2.04.formatNumber // 2
-// str1 = 3000.0.formatNumber // 3,000
 
-
-
-// print(Date(dateString: "2024-01-10") as Any)
-
-//public extension Date {
-//  private var formatter: DateFormatter {
-//    let formatter = DateFormatter()
-//    formatter.timeZone = NSTimeZone.system
-//    formatter.locale = Locale(identifier: "en_US_POSIX")
-//    formatter.calendar = Calendar(identifier: .gregorian)
-//    return formatter
-//  }
-//  private static var formatter: DateFormatter {
-//    let formatter = DateFormatter()
-//    formatter.timeZone = NSTimeZone.system
-//    formatter.locale = Locale(identifier: "en_US_POSIX")
-//    formatter.calendar = Calendar(identifier: .gregorian)
-//    return formatter
-//  }
-//  // Date→String
-//  func string(format: String = "yyyy-MM-dd'T'HH:mm:ssZ") -> String {
-//    let formatter: DateFormatter = DateFormatter()
-//    formatter.timeZone = NSTimeZone.system
-//    formatter.locale = Locale(identifier: "en_US_POSIX")
-//    formatter.calendar = Calendar(identifier: .gregorian)
-//    // 理由は不明だが、計算型プロパティは不可。clousureの即時呼出で値をセット
-//    formatter.dateFormat = format
-//    return formatter.string(from: self)
-//  }
-//
-//  // String → Date, used at xtics, xtics2
-//  init?(dateString: String, dateFormat: String = "yyyy/MM/dd") {
-//    // Static member 'formatter' cannot be used on instance of type 'Date'
-//    Date.formatter.dateFormat = dateFormat
-//    guard let date = Date.formatter.date(from: dateString) else { return nil }
-//    self = date
-//  }
-//}
 extension Array {
   func revert<T>(ar: [T]) -> [T] {
     var ret: [T] = []
@@ -149,7 +102,6 @@ let columns: [GridItem]
 //  [Swiftでキューを理解する #Swift - Qiita](https://qiita.com/katopan/items/987ae34ef6fe94782f81)
 //  Created by Tanaka Hiroshi on 2025/04/13.
 //
-
 
 struct Queue<T: Equatable> {
   var ar: [T]
@@ -184,12 +136,6 @@ struct Queue<T: Equatable> {
     return ar.isEmpty
   }
 }
-//var queueOfAnimals = Queue(ar: ["🐺", "🐵", "🐑", "🐶", "🐍"], maxSize: 5)
-//末尾に入れる
-//queueOfAnimals.enqueue("🐯")
-//先頭を取り除く
-//queueOfAnimals.dequeue()
-
 //🔹 === Global func and Constant ===
 let CHARTWIDTH: Double = 400
 let MAXSIZE: Int = 20

@@ -70,22 +70,18 @@ public class VM: ObservableObject {
       print("--- didSet typ: \(typ)---")
       Task {
         if typ == .dy {
-//          ar = dy
           ar = Array(dy.suffix(limit))
         } else if typ == .wk {
           wk = convertToWeeklyData(from: dy)
-//          ar = wk
           ar = Array(wk.suffix(limit))
         } else if typ == .mn {
           mn = convertToMonthlyData(from: dy)
-//          ar = mn
           ar = Array(mn.suffix(limit))
         }
       }
     }
   }
   let dateFormatter = Date.formatter
-//  let dateFormatter = DateFormatter()
 #if DEBUG
   public init(ar: [candle] = dummy, ticker: String = "0000") {
     print("N225")

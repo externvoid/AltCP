@@ -90,9 +90,6 @@ struct OnKeyPress: ViewModifier {
 // MARK: ViewModifier 3
 struct TitleBarBtn: ViewModifier {
   @Binding var typ: Typ
-//  @State var isShown: Bool = false
-//  @State var txt: String = ""
-//  @State var limit: Int = 10
   func body(content: Content) -> some View {
     content
       .toolbar {
@@ -151,7 +148,6 @@ struct TitleBarMnu: ViewModifier {
   @Binding var limit: Int
   @State var txt: String = "Input Num"
   @State var isShown: Bool = false
-//  let cnt1 = 90, cnt2 = 120, cnt3 = 150
   func body(content: Content) -> some View {
     content
       .toolbar { // toolbarTitleMenu
@@ -196,32 +192,6 @@ struct TitleBarMnu: ViewModifier {
                 Image(systemName: "3.circle.fill")
               }
             }
-            /*
-            Button(action: {
-              isShown = true
-              print("pressed")
-            },label: {
-              Image(systemName: "xmark.circle.fill")
-            })
-            .popover(isPresented: $isShown) {
-              let _ = print("popover")
-              VStack {
-                Text("Enter a number")
-                TextField("", text: $txt)
-                  .focusable()
-                Button("OK") {
-                  limit = Int(txt) ?? 0
-                  isShown = false
-                }
-              }
-            }
-            */
-            //            TextEditor(text: $txt)
-            //            Button("input Num") {
-            //              NSPopover.defaultPlaceholder.show(relativeTo: .init(itemIdentifier: .init(rawValue: "inputNum")), of: nil, preferredEdge: .minYEdge)
-            //            }
-            //            TextField("input Num", text: $txt)
-            //              .focusable()
           }
         } // toolbar
       }

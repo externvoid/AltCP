@@ -11,9 +11,6 @@ enum DBPath {
 //    let dbBase = "~/Library/Application Support/ChartPlot/"
     let dbBase = "/Users/tanaka/Library/Application Support/ChartPlot/"
 
-//    let dbBase = "/Volumes/twsmb/newya/asset/"
-//    let dbBase = "/Volumes/home/NASData/StockDB/"
-
     let dbPath0 = dbBase + "crawling.db"
     let dbPath1 = dbBase + "yatoday.db"
     let dbPath2 = dbBase + "n225Hist.db"

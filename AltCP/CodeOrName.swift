@@ -14,9 +14,6 @@ extension StockView {
           ListItemView(c: c, isShown: $isShown, n: n, title: items[n])
             .listRowInsets(.init())
         }
-        //        }
-        //      .task { ar = await fetchCodeTbl(url) }
-        //      .task { if ar.isEmpty { ar = await fetchCodeTbl(url) } }
       }
     }
 //    .listStyle(.plain)
