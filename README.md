@@ -1,3 +1,17 @@
+📅2025/04/25Fr
+@FocusState var focusItem: Int?
+
+📅2025/04/24Th
+multi modeが動くようになってきた。single mode <--> multi modeの切り替えができる様にしたい。
+CodeHist@CatWSのコードが参考になる。
+onTapGestureでFocusが当たっているViewを判定出来る。Focusが外れた判定は?
+🔹Xcode Short Cutまとめ
+1. MiniMap: cmd-N
+2. find Selected Text: opt-H
+3. find Selected Symbol: cmd-H
+
+TODO: コメントを厳選 Carefully select comments
+
 📅2025/04/18Fr
 変数、メソッドの説明
 - ContentView.swift

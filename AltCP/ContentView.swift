@@ -25,7 +25,8 @@ struct ContentView: View {
     } // ScrollView
     .modifier(TitleBarMnu(limit: $env.limit))
     .modifier(TitleBarBtn(typ: $env.typ))
-    .navigationTitle("multi mode")
+//    .navigationTitle("multi mode")
+    .navigationTitle(env.titleBar)
     .task {
       if codes.isEmpty {
         do {
@@ -56,6 +57,8 @@ struct StockView: View {
   @StateObject var c: VM
   @Binding var codes: [[String]]//; @Binding var selStr: String
   @EnvironmentObject var env: AppState
+  @State var titleBar: String = ""
+//  @FocusState var focusItem: String?
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
@@ -79,6 +82,10 @@ struct StockView: View {
         plot(fsize: fsize) // MARK: plot
       }
     }  // geo
+    .onTapGesture {
+      print("code@onTapGesture: \(c.ticker)"); env.titleBar = c.ticker
+    }
+//    .focused($focusItem, equals: c.ticker)
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
 //      Task { // This part was moved to ticker@VM
@@ -103,7 +110,7 @@ struct StockView: View {
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
 //    .modifier(TitleBarMnu(limit: $c.limit))
 //    .modifier(TitleBarBtn(typ: $c.typ))
-//    .navigationTitle(c.ticker)
+//    .navigationTitle(titleBar)
   }  // body
 }  // View
 extension StockView {
