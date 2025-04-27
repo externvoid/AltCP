@@ -2,7 +2,7 @@
 import SwiftUI
 
 // MARK: CodeOrNameView
-extension ChartView3 {
+extension StockView {
   // MARK: - codeOrNameView
   var popUp2: some View {
 
@@ -52,9 +52,9 @@ extension ChartView3 {
 #Preview {
   @Previewable @State var sels: String = "0000"
   VStack(spacing: 0.0) {
-    ChartView3(selected: sels, codes: .constant([["0000"]]))
+    StockView(selected: sels, codes: .constant([["0000"]]))
       .frame(width: 400 , height: 260)
-    //      ChartView3(selected: $sels[0])
+    //      StockView(selected: $sels[0])
   }
   .padding(.all, 3)
 }

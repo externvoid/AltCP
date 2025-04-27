@@ -3,15 +3,14 @@ import NWer
 import SwiftUI
 
 struct ContentView: View {
-//  @State var sels: String = "0000"
-  @AppStorage("foo") var sels: String = "0000"
-  //  @State var vms: [VM] = [.init(ar: VM.dummy), .init(ar: VM.dummy)]
+  @AppStorage("foo") var selStr: String = "0000"
+  var sels: String {
+    get { selStr.components(separatedBy: ",").first ?? "0000" }
+  }
   @State var codes: [[String]] = []
   var body: some View {
     VStack(spacing: 0.0) {
-      ChartView3(selected: sels, codes: $codes)
-//      ChartView3(selected: $sels[0])
-      ChartView3(selected: "1301", codes: $codes)
+      StockView(selected: sels, codes: $codes)
     }
     .task {
       print("codes.count@ContentView: \(codes.count)")
@@ -31,9 +30,9 @@ struct ContentView: View {
   }
 }
 
-/// - Description: plot wrapper
+/// - Description: chart wrapper
 /// - Parameter selected: ticker code
-struct ChartView3: View {
+struct StockView: View {
 //  @EnvironmentObject var appState: AppState  // 無視
   @State var isShown: Bool = false
   @State var hoLoc: CGPoint = .zero
@@ -61,34 +60,17 @@ struct ChartView3: View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
       if !c.ar.isEmpty {
-        plot(fsize: fsize) // MARK: plot
+        chart(fsize: fsize) // MARK: chart
       }
     }  // geo
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      Task {
-//        c.ar = try! await Networker.queryHist(
-//          c.ticker, DBPath.dbPath(0), DBPath.dbPath(2))
-//      }
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
 //      c.ticker = selected
     }
-//    .task {
-//      print("codes.count@task: \(codes.count)")
-//      if codes.isEmpty {
-//        do {
-//          codes = try await Networker.queryCodeTbl(
-//            DBPath.dbPath(1),
-//            DBPath.dbPath(2))
-//          print("task: \(codes.count)")
-//        } catch {
-//          print("error@task: \(error)")
-//        }
-//      }
-//    }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
@@ -97,21 +79,21 @@ struct ChartView3: View {
     .navigationTitle(c.ticker)
   }  // body
 }  // View
-extension ChartView3 {
-// MARK: plot
-  func plot(fsize: CGSize) -> some View {
+extension StockView {
+// MARK: chart
+  func chart(fsize: CGSize) -> some View {
     ZStack(alignment: .bottomTrailing) {
       CursorLine(hoLoc: hoLoc)
         .stroke(Color.red.opacity(0.3), lineWidth: 1)
         .frame(width: fsize.width)
-      chart(fsize: fsize)
+      candle(fsize: fsize)
         .modifier(OnKeyPress(c: c, codes: codes))
       dateOHLCV(fsize: fsize)
       btn
         .padding([.bottom, .trailing], 3)
     }  //   Z
     .modifier(OnHover(hoLoc: $hoLoc, oldLoc: $oldLoc, fsize: fsize))
-  }  // plot
+  }  // chart
 // - Description
 // MARK: dateOHLCV
   func dateOHLCV(fsize: CGSize) -> some View {
@@ -160,7 +142,7 @@ extension ChartView3 {
       }
       //          .offset(x: -fsize.width + 45, y: -fsize.height + 28)
       //          .border(.green.opacity(0.6), width: 1)
-      //        chart(fsize: hsize)
+      //        candle(fsize: hsize)
       //          .border(.orange.opacity(0.6), width: 1)
     }
   }  // dateOHLCV
@@ -182,7 +164,7 @@ struct CursorLine: Shape {
 }
 
 // MARK: extension
-extension ChartView3 {
+extension StockView {
   @ViewBuilder
   var btn: some View {
     Button(

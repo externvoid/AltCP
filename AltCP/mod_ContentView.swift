@@ -97,50 +97,39 @@ struct TitleBarBtn: ViewModifier {
     content
       .toolbar {
         HStack(spacing:0) {
-          //          Spacer()
+          Button { debugPrint("Daily tapped"); typ = .dy }
+            label: {
+            if typ == .dy { Image(systemName: "d.square.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.red, .yellow)
+            } else { Image(systemName: "d.square.fill") }
+          }.disabled(typ == .dy)
 
-          Button(action: {
-            debugPrint("Daily tapped")
-            typ = .dy
-          }) {
-            if typ == .dy {
-              Image(systemName: "d.square.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.red, .yellow)
+          Button { print("Weekly tapped"); typ = .wk }
+            label: {
+            if typ == .wk { Image(systemName: "w.square.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.blue, .pink)
+            } else { Image(systemName: "w.square.fill") }
+          }.disabled(typ == .wk)
 
-            } else {
-              Image(systemName: "d.square.fill")
-            }
-          }
-          .disabled(typ == .dy)
+          Button { print("Monthly selected"); typ = .mn }
+            label: {
+            if typ == .mn { Image(systemName: "m.square.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.red, .green)
+            } else { Image(systemName: "m.square.fill") }
+          }.disabled(typ == .mn)
 
-          Button(action: {
-            print("Weekly tapped")
-            typ = .wk
-          }) {
-            if typ == .wk {
-              Image(systemName: "w.square.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.blue, .pink)
-            } else { // not trapped
-              Image(systemName: "w.square.fill")
-            }
-          }
-          .disabled(typ == .wk)
-
-          Button(action: {
-            print("Monthly selected")
-            typ = .mn
-          }) {
-            if typ == .mn {
-              Image(systemName: "m.square.fill")
+          Button { print("DWM candle selected"); }
+          label: {
+              Image(systemName: "star.square.fill")
+              //              if typ == .mn { Image(systemName: "*.square.fill")
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.red, .green)
-            } else {
-              Image(systemName: "m.square.fill")
+              //            } else { Image(systemName: "*.square.fill") }
+              //          }.disabled(typ == .mn)
             }
-          }
-          .disabled(typ == .mn)
         }
       } // toolbar
   }

@@ -8,12 +8,12 @@
 
 //  Created by Tanaka Hiroshi on 2024/09/26.
 
-// MARK: chart
+// MARK: candle
 import SwiftUI
 
-extension ChartView3 {
+extension StockView {
   @ViewBuilder
-  func chart(fsize: CGSize) -> some View {
+  func candle(fsize: CGSize) -> some View {
 //    let fsize: CGSize = geometry.size
     ZStack(alignment: .bottom) {
       VStack(spacing: 0.0) {//, content: <#T##() -> View#>) {
@@ -35,7 +35,7 @@ extension ChartView3 {
       }.frame(width: fsize.width, height: 20, alignment: .bottom)
               .offset(y: 04)
     }  // Z
-  }  // chart
+  }  // candle
 /// - Description: Addressed missing Volume Graph
   func volumes(_ ctx: GraphicsContext, _ size: CGSize) {
     //  let h = size.height

@@ -39,6 +39,8 @@ public class VM: ObservableObject {
   {
     didSet {
       print("--- didSet ticker: \(ticker)---")
+//      ticker = "0000"
+      if ticker.isEmpty { ticker = "0000" }
       Task {
         if typ == .dy {
           do {
