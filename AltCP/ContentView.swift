@@ -8,11 +8,33 @@ struct ContentView: View {
     get { selStr.components(separatedBy: ",").first ?? "0000" }
   }
   @State var codes: [[String]] = []
+  @EnvironmentObject var env: AppState
   var body: some View {
     VStack(spacing: 0.0) {
-      StockView(selected: sels, codes: $codes)
-        .environmentObject(AppState(.wk))
+      dwmPlot()
     }
+  }
+  func singlePlot() -> some View {
+    StockView(selected: sels, codes: $codes)
+      .environmentObject(AppState(.wk))
+  }
+  func dwmPlot() -> some View {
+    ScrollView(.vertical) {
+      LazyVGrid(columns: columns, spacing: 10) {
+        ForEach(Typ.allCases, id: \.id) {typ in
+          StockView(selected: sels, codes: $codes)
+            .environmentObject(AppState(typ))
+          //                      .onLongPressGesture {
+          //                          selection = e
+          //                        }
+            .frame(height: CHARTWIDTH*0.75)
+            .padding(5)
+        }
+      }
+    } // ScrollView
+    .modifier(TitleBarMnu(limit: $env.limit))
+    .modifier(TitleBarBtn(typ: $env.typ))
+    .navigationTitle(env.titleBar)
     .task {
       print("codes.count@ContentView: \(codes.count)")
       if codes.isEmpty {
@@ -57,7 +79,7 @@ struct StockView: View {
   var items: [String] {
     txt.isEmpty ? allItems : Array(allItems.filter { $0.contains(txt) })
   }
-  // MARK: body
+  // MARK: body: StockView
   var body: some View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size

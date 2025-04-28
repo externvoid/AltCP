@@ -139,5 +139,10 @@ extension Array {
 
 // 2025-04-18Fr
 import SwiftUI
+let CHARTWIDTH: Double = 400
+let CANNUMSMA: Int = 90
+let CANNUMMID: Int = 120
+let CANNUMLAR: Int = 150
 let columns: [GridItem]
-= [GridItem(.adaptive(minimum: 100, maximum: .infinity), spacing: 5)]
+= [GridItem(.adaptive(minimum: CHARTWIDTH, maximum: .infinity), spacing: 5)]
+
