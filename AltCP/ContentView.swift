@@ -11,6 +11,7 @@ struct ContentView: View {
   var body: some View {
     VStack(spacing: 0.0) {
       StockView(selected: sels, codes: $codes)
+        .environmentObject(AppState(.wk))
     }
     .task {
       print("codes.count@ContentView: \(codes.count)")
@@ -39,6 +40,7 @@ struct StockView: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
+  @EnvironmentObject var env: AppState
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
@@ -69,7 +71,9 @@ struct StockView: View {
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
-//      c.ticker = selected
+      //    initial Value
+      c.typ = env.typ
+      print("c.typ@onChange: \(c.typ)")
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))

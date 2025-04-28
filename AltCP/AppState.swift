@@ -5,5 +5,11 @@
 import Foundation
 
 class AppState: ObservableObject {
-  @Published var isShown: Bool = false
+  @Published var typ: Typ = .dy
+//  @Published var limit: Int = CANNUMSMA
+  @Published var titleBar: String = ""
+  init() {}
+  init(_ typ: Typ) {
+    self.typ = typ
+  }
 }
