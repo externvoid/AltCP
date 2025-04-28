@@ -12,6 +12,7 @@ struct ContentView: View {
     if let text = selection {
       singlePlot(text)
     } else {
+      let _ = print("\n <-- Start Plot\n")
       multiPlot()
     }
   }
@@ -90,6 +91,7 @@ struct StockView: View {
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
+    print("selected: \(selected)")
    }
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
@@ -113,14 +115,22 @@ struct StockView: View {
     }
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-      if selStr.isEmpty { selStr = c.ticker } else { selStr += ("," + c.ticker) }
-      selStr = makeLimitedCodesContaingStr(selStr)
-
-      UserDefaults.standard.set(selStr, forKey: "foo")
+//      if selStr.isEmpty { selStr = c.ticker } else { selStr += ("," + c.ticker) }
+      let tickers = selStr.components(separatedBy: ",")
+      if !tickers.contains(c.ticker) {  // 重複チェック
+        if selStr.isEmpty {
+          selStr = c.ticker
+        } else {
+          selStr += ("," + c.ticker)
+        }
+        selStr = makeLimitedCodesContaingStr(selStr)
+        UserDefaults.standard.set(selStr, forKey: "foo")
+      }
     }
     .onChange(of: env.typ) { c.typ = env.typ }
     .onChange(of: env.limit) { c.limit = env.limit }
     .onAppear {
+//      c.ticker = sels.ar.first!
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
     }
     .background(
