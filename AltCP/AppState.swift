@@ -8,6 +8,7 @@ class AppState: ObservableObject {
   @Published var typ: Typ = .dy
   @Published var limit: Int = CANNUMSMA
   @Published var titleBar: String = ""
+  @Published var dwm: Bool = true
   init() {}
   init(_ typ: Typ) {
     self.typ = typ

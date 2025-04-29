@@ -89,7 +89,8 @@ struct OnKeyPress: ViewModifier {
 
 // MARK: ViewModifier 3
 struct TitleBarBtn: ViewModifier {
-  @Binding var typ: Typ
+//  @Binding var typ: Typ
+  @EnvironmentObject var env: AppState
 //  @State var isShown: Bool = false
 //  @State var txt: String = ""
 //  @State var limit: Int = 10
@@ -97,39 +98,37 @@ struct TitleBarBtn: ViewModifier {
     content
       .toolbar {
         HStack(spacing:0) {
-          Button { debugPrint("Daily tapped"); typ = .dy }
+          Button { debugPrint("Daily tapped"); env.typ = .dy; env.dwm = false }
             label: {
-            if typ == .dy { Image(systemName: "d.square.fill")
+              if env.typ == .dy && env.dwm == false { Image(systemName: "d.square.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.red, .yellow)
             } else { Image(systemName: "d.square.fill") }
-          }.disabled(typ == .dy)
+          }.disabled(env.typ == .dy && env.dwm == false) // true: noninteractive
 
-          Button { print("Weekly tapped"); typ = .wk }
+          Button { print("Weekly tapped"); env.typ = .wk; env.dwm = false }
             label: {
-            if typ == .wk { Image(systemName: "w.square.fill")
+            if env.typ == .wk && env.dwm == false { Image(systemName: "w.square.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.blue, .pink)
             } else { Image(systemName: "w.square.fill") }
-          }.disabled(typ == .wk)
+          }.disabled(env.typ == .wk)
 
-          Button { print("Monthly selected"); typ = .mn }
+          Button { print("Monthly selected"); env.typ = .mn; env.dwm = false }
             label: {
-            if typ == .mn { Image(systemName: "m.square.fill")
+            if env.typ == .mn && env.dwm == false{ Image(systemName: "m.square.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.red, .green)
             } else { Image(systemName: "m.square.fill") }
-          }.disabled(typ == .mn)
+          }.disabled(env.typ == .mn)
 
-          Button { print("DWM candle selected"); }
-          label: {
-              Image(systemName: "star.square.fill")
-              //              if typ == .mn { Image(systemName: "*.square.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.red, .green)
-              //            } else { Image(systemName: "*.square.fill") }
-              //          }.disabled(typ == .mn)
-            }
+          Button { print("DWM candle selected"); env.dwm = true }
+            label: {
+            if env.dwm == true { Image(systemName: "star.square.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.red, .green)
+            } else { Image(systemName: "star.square.fill") }
+           }.disabled(env.dwm == true)
         }
       } // toolbar
   }

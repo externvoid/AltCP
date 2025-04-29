@@ -11,12 +11,39 @@ struct ContentView: View {
   @EnvironmentObject var env: AppState
   var body: some View {
     VStack(spacing: 0.0) {
-      dwmPlot()
+      if env.dwm {
+        dwmPlot()
+      } else {
+        singlePlot()
+      }
     }
   }
   func singlePlot() -> some View {
     StockView(selected: sels, codes: $codes)
-      .environmentObject(AppState(.wk))
+      .onChange(of: env.typ) { old, newValue in
+        print("env.typ changed to \(newValue)")
+      }
+      .environmentObject(AppState(env.typ))
+      .modifier(TitleBarMnu(limit: $env.limit))
+      .modifier(TitleBarBtn())
+    //    .modifier(TitleBarBtn(typ: $env.typ))
+      .navigationTitle(env.titleBar)
+      .task {
+        print("codes.count@ContentView: \(codes.count)")
+        if codes.isEmpty {
+          do {
+            codes = try await Networker.queryCodeTbl(
+              DBPath.dbPath(1),
+              DBPath.dbPath(2))
+            print("ContentView: \(codes.count)")
+          } catch {
+            print("error@ContentView: \(error)")
+          }
+        }
+      }
+      .padding(.bottom, 4.5)
+      .padding([.top, .leading, .trailing], 3)
+//      .environmentObject(AppState(.wk))
   }
   func dwmPlot() -> some View {
     ScrollView(.vertical) {
@@ -33,7 +60,8 @@ struct ContentView: View {
       }
     } // ScrollView
     .modifier(TitleBarMnu(limit: $env.limit))
-    .modifier(TitleBarBtn(typ: $env.typ))
+    .modifier(TitleBarBtn())
+//    .modifier(TitleBarBtn(typ: $env.typ))
     .navigationTitle(env.titleBar)
     .task {
       print("codes.count@ContentView: \(codes.count)")
@@ -91,18 +119,22 @@ struct StockView: View {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
+    .onChange(of: env.typ) {
+      c.typ = env.typ
+      print("onChange: \(c.typ): c.ar: \(c.ar.count)")
+    }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       //    initial Value
       c.typ = env.typ
-      print("c.typ@onChange: \(c.typ)")
+      print("c.typ@onAppear: \(c.typ)")
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
 //    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
-    .modifier(TitleBarMnu(limit: $c.limit))
-    .modifier(TitleBarBtn(typ: $c.typ))
-    .navigationTitle(c.ticker)
+//    .modifier(TitleBarMnu(limit: $c.limit))
+//    .modifier(TitleBarBtn(typ: $c.typ))
+//    .navigationTitle(c.ticker)
   }  // body
 }  // View
 extension StockView {
