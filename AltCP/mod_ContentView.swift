@@ -136,21 +136,21 @@ struct TitleBarBtn: ViewModifier {
 
 // MARK: ViewModifier 4
 struct TitleBarMnu: ViewModifier {
-  @Binding var limit: Int
+  @EnvironmentObject var env: AppState
   @State var txt: String = "Input Num"
   @State var isShown: Bool = false
-  let cnt1 = 90, cnt2 = 120, cnt3 = 150
+//  let cnt1 = 90, cnt2 = 120, cnt3 = 150
   func body(content: Content) -> some View {
     content
       .toolbar { // toolbarTitleMenu
         ToolbarItem(placement: .primaryAction) {
           Menu("Num") {
             Button(action: {
-              limit = cnt1
+              env.limit = CANNUMSMA
               print("1 tapped")
             }) {
-              Text(String(cnt1))
-              if limit == cnt1 {
+              Text(String(CANNUMSMA))
+              if env.limit == CANNUMSMA {
                 Image(systemName: "1.circle.fill")
                   .symbolRenderingMode(.palette)
                   .foregroundStyle(.red, .green)
@@ -159,11 +159,11 @@ struct TitleBarMnu: ViewModifier {
               }
             }
             Button(action: {
-              limit = cnt2
+              env.limit = CANNUMMID
               print("2 tapped")
             }) {
-              Text(String(cnt2))
-              if limit == cnt2 {
+              Text(String(CANNUMMID))
+              if env.limit == CANNUMMID {
                 Image(systemName: "2.circle.fill")
                   .symbolRenderingMode(.palette)
                   .foregroundStyle(.red, .yellow)
@@ -172,11 +172,11 @@ struct TitleBarMnu: ViewModifier {
               }
             }
             Button(action: {
-              limit = cnt3
+              env.limit = CANNUMLAR
               print("3 tapped")
             }) {
-              Text(String(cnt3))
-              if limit == cnt3 {
+              Text(String(CANNUMLAR))
+              if env.limit == CANNUMLAR {
                 Image(systemName: "3.circle.fill")
                   .symbolRenderingMode(.palette)
                   .foregroundStyle(.blue, .pink)

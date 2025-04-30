@@ -20,11 +20,12 @@ struct ContentView: View {
   }
   func singlePlot() -> some View {
     StockView(selected: sels, codes: $codes)
-      .onChange(of: env.typ) { old, newValue in
-        print("env.typ changed to \(newValue)")
-      }
-      .environmentObject(AppState(env.typ))
-      .modifier(TitleBarMnu(limit: $env.limit))
+//      .onChange(of: env.typ) { old, newValue in
+//        print("env.typ changed to \(newValue)@single Plot")
+//      }
+//      .environmentObject(AppState(env.typ))
+      .modifier(TitleBarMnu())
+//      .modifier(TitleBarMnu(limit: $env.limit))
       .modifier(TitleBarBtn())
     //    .modifier(TitleBarBtn(typ: $env.typ))
       .navigationTitle(env.titleBar)
@@ -50,7 +51,8 @@ struct ContentView: View {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(Typ.allCases, id: \.id) {typ in
           StockView(selected: sels, codes: $codes)
-            .environmentObject(AppState(typ))
+            .environmentObject(AppState(typ: typ, limit: env.limit))
+//            .environmentObject(AppState(typ: typ, limit: env.limit, ticker: env.ticker))
           //                      .onLongPressGesture {
           //                          selection = e
           //                        }
@@ -59,7 +61,8 @@ struct ContentView: View {
         }
       }
     } // ScrollView
-    .modifier(TitleBarMnu(limit: $env.limit))
+    .modifier(TitleBarMnu())
+//    .modifier(TitleBarMnu(limit: $env.limit))
     .modifier(TitleBarBtn())
 //    .modifier(TitleBarBtn(typ: $env.typ))
     .navigationTitle(env.titleBar)
@@ -102,7 +105,6 @@ struct StockView: View {
   @State var isLoading: Bool = false
   var allItems: [String] {  // code, company, category
     codes.map { e in e[0] + ": " + e[1] + ": " + e[2] }
-    //    codes.map { e in (e[0] + ": " + e[1] + ": " + e[2]).trimmingCharacters(in: .whitespaces) }
   }
   var items: [String] {
     txt.isEmpty ? allItems : Array(allItems.filter { $0.contains(txt) })
@@ -116,6 +118,7 @@ struct StockView: View {
       }
     }  // geo
     .onChange(of: c.ticker) {
+//      env.ticker = c.ticker
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
@@ -123,10 +126,20 @@ struct StockView: View {
       c.typ = env.typ
       print("onChange: \(c.typ): c.ar: \(c.ar.count)")
     }
+    .onChange(of: env.limit) {
+      c.limit = env.limit
+      print("onChange: \(c.limit): c.ar: \(c.ar.count)")
+    }
+//    .onChange(of: env.ticker) {
+//      c.ticker = env.ticker
+//      print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
+//      UserDefaults.standard.set(c.ticker, forKey: "foo")
+//    }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       //    initial Value
       c.typ = env.typ
+      c.limit = env.limit
       print("c.typ@onAppear: \(c.typ)")
     }
     .background(
@@ -269,7 +282,9 @@ extension StockView {
                 scrollPosition = number
                 //                                selected =
                 c.ticker =
+//                env.ticker =
                   items[number].components(separatedBy: ":").first ?? ""
+//                env.ticker = c.ticker
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
@@ -313,6 +328,7 @@ extension StockView {
           print("press Enter: \(txt.wrappedValue)")
           if !items.isEmpty {
             c.ticker =
+//            env.ticker =
             items[0].components(separatedBy: ":").first ?? ""
           }
           isShown = false
