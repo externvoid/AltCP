@@ -88,7 +88,7 @@ struct OnKeyPress: ViewModifier {
 }
 
 // MARK: ViewModifier 3
-struct TitleBarBtn: ViewModifier {
+struct TitleBarBtn2: ViewModifier {
 //  @Binding var typ: Typ
   @EnvironmentObject var env: AppState
 //  @State var isShown: Bool = false
@@ -135,7 +135,7 @@ struct TitleBarBtn: ViewModifier {
 }
 
 // MARK: ViewModifier 4
-struct TitleBarMnu: ViewModifier {
+struct TitleBarMnu2: ViewModifier {
   @EnvironmentObject var env: AppState
   @State var txt: String = "Input Num"
   @State var isShown: Bool = false

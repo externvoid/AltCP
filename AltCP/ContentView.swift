@@ -9,13 +9,25 @@ struct ContentView: View {
   }
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
+  @EnvironmentObject var env2: AppState2
   var body: some View {
     VStack(spacing: 0.0) {
       if env.dwm {
-        dwmPlot()
+        let _ = print("env2.ticker@ContentView: \(env2.ticker.isEmpty ? "empty" : env2.ticker)")
+        dwmPlot(env2.ticker)
       } else {
         singlePlot()
       }
+    }
+    .onChange(of: env2.ticker) { // unreachable
+//      selStr = env.ticker
+      print("onChange@ContentView: \(env2.ticker)")
+    }
+    .onChange(of: env.typ) { // unreachable
+      print("onChange@ContentView: \(env.typ)")
+    }
+    .onChange(of: env.dwm) {
+      print("onChange@ContentView: \(env.dwm)")
     }
   }
   func singlePlot() -> some View {
@@ -24,13 +36,13 @@ struct ContentView: View {
 //        print("env.typ changed to \(newValue)@single Plot")
 //      }
 //      .environmentObject(AppState(env.typ))
-      .modifier(TitleBarMnu())
+      .modifier(TitleBarMnu2())
 //      .modifier(TitleBarMnu(limit: $env.limit))
-      .modifier(TitleBarBtn())
+      .modifier(TitleBarBtn2())
     //    .modifier(TitleBarBtn(typ: $env.typ))
       .navigationTitle(env.titleBar)
       .task {
-        print("codes.count@ContentView: \(codes.count)")
+        print("codes.count@SinglePlot: \(codes.count)")
         if codes.isEmpty {
           do {
             codes = try await Networker.queryCodeTbl(
@@ -46,28 +58,24 @@ struct ContentView: View {
       .padding([.top, .leading, .trailing], 3)
 //      .environmentObject(AppState(.wk))
   }
-  func dwmPlot() -> some View {
+  func dwmPlot(_ txt: String) -> some View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(Typ.allCases, id: \.id) {typ in
-          StockView(selected: sels, codes: $codes)
+          StockView(selected: txt.isEmpty ? sels : txt, codes: $codes)
             .environmentObject(AppState(typ: typ, limit: env.limit))
-//            .environmentObject(AppState(typ: typ, limit: env.limit, ticker: env.ticker))
-          //                      .onLongPressGesture {
-          //                          selection = e
-          //                        }
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
         }
       }
     } // ScrollView
-    .modifier(TitleBarMnu())
+    .modifier(TitleBarMnu2())
 //    .modifier(TitleBarMnu(limit: $env.limit))
-    .modifier(TitleBarBtn())
+    .modifier(TitleBarBtn2())
 //    .modifier(TitleBarBtn(typ: $env.typ))
     .navigationTitle(env.titleBar)
     .task {
-      print("codes.count@ContentView: \(codes.count)")
+      print("codes.count@dwmPlot: \(codes.count)")
       if codes.isEmpty {
         do {
           codes = try await Networker.queryCodeTbl(
@@ -94,6 +102,7 @@ struct StockView: View {
 
   @StateObject var c: VM
   @EnvironmentObject var env: AppState
+  @EnvironmentObject var env2: AppState2
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
@@ -119,7 +128,7 @@ struct StockView: View {
     }  // geo
     .onChange(of: c.ticker) {
 //      env.ticker = c.ticker
-      print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
+      print("onChange@StockView: \(c.ticker): c.ar: \(c.ar.count)")
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onChange(of: env.typ) {
@@ -130,11 +139,11 @@ struct StockView: View {
       c.limit = env.limit
       print("onChange: \(c.limit): c.ar: \(c.ar.count)")
     }
-//    .onChange(of: env.ticker) {
-//      c.ticker = env.ticker
-//      print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      UserDefaults.standard.set(c.ticker, forKey: "foo")
-//    }
+    .onChange(of: env2.ticker) {
+      c.ticker = env2.ticker
+      print("onChange: \(env2.ticker): c.ar: \(c.ar.count)")
+      UserDefaults.standard.set(c.ticker, forKey: "foo")
+    }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       //    initial Value
@@ -263,7 +272,13 @@ extension StockView {
     .popover(isPresented: $isShown) {
       ZStack {
 //        Color.white.opacity(0.5)
-        popUp
+//        popUp
+        PopUp2(
+          txt: $txt,
+          isShown: $isShown,
+          scrollPosition: $scrollPosition,
+          items: items
+        )
       }
       .frame(width: 300, height: 300)
     }
@@ -282,9 +297,7 @@ extension StockView {
                 scrollPosition = number
                 //                                selected =
                 c.ticker =
-//                env.ticker =
                   items[number].components(separatedBy: ":").first ?? ""
-//                env.ticker = c.ticker
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
@@ -330,6 +343,7 @@ extension StockView {
             c.ticker =
 //            env.ticker =
             items[0].components(separatedBy: ":").first ?? ""
+//            selsStr = "0000"
           }
           isShown = false
         }
@@ -356,7 +370,7 @@ extension StockView {
       return info
     }
   }
-  // MARK: findNext
+  // MARK: findNext, not used
   func findNext(_ code: String) -> [String] {
     for i in codes.indices {
       if codes[i][0] == code {
@@ -374,7 +388,7 @@ extension StockView {
   /// - Description: the index to ticker and company name.
   /// - Parameter scPos: the index of Array of Array, that is codes.
   /// - Returns: ticker and company name.
-  // MARK: codeInfo
+  // MARK: codeInfo, not used
   func codeInfo(_ scPos: Int?) -> String {
     if scPos != nil && codes.isEmpty == false {
       print(scPos!)
@@ -394,4 +408,5 @@ extension StockView {
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)
     .environmentObject(AppState())
+    .environmentObject(AppState2())
 }
