@@ -13,7 +13,7 @@ struct ContentView: View {
   var body: some View {
     VStack(spacing: 0.0) {
       if env.dwm {
-        let _ = print("env2.ticker@ContentView: \(env.ticker.isEmpty ? "empty" : env.ticker)")
+        let _ = print("env.ticker@ContentView: \(env.ticker.isEmpty ? "empty" : env.ticker)")
         dwmPlot(env.ticker)
       } else {
         singlePlot()
@@ -110,6 +110,7 @@ struct StockView: View {
   init(selected: String, typ: Typ, codes: Binding<Array<Array<String>>>){
     _c = StateObject(wrappedValue: VM(ticker: selected, typ: typ))
     _codes = codes
+//    env.typ = typ
   }
   @Binding var codes: [[String]]// = []
 //  @State var codes: [[String]] = []
@@ -124,6 +125,7 @@ struct StockView: View {
   }
   // MARK: body: StockView
   var body: some View {
+//    let _ = env.typ = typ
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
       if !c.ar.isEmpty {
@@ -143,6 +145,11 @@ struct StockView: View {
       c.limit = env.limit
       print("onChange: \(c.limit): c.ar: \(c.ar.count)")
     }
+//    .onChange(of: env.dwm) {
+//      c.typ = env.typ
+//      c.limit = env.limit
+//      print("onChange: \(env.dwm): c.ar: \(c.ar.count)")
+//    }
     .onChange(of: env.ticker) {
       c.ticker = env.ticker
       print("onChange: \(env.ticker): c.ar: \(c.ar.count)")
@@ -151,8 +158,10 @@ struct StockView: View {
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       //    initial Value
-//      c.typ = env.typ
-//      c.limit = env.limit
+      if !env.dwm {
+              c.typ = env.typ
+              c.limit = env.limit
+      }
       print("c.typ@onAppear: \(c.typ)")
     }
     .background(
