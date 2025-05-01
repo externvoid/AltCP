@@ -88,6 +88,106 @@ struct OnKeyPress: ViewModifier {
 }
 
 // MARK: ViewModifier 3
+struct TitleBarBtn: ViewModifier {
+    @Binding var typ: Typ
+  @Binding var dwm: Bool
+  func body(content: Content) -> some View {
+    content
+      .toolbar {
+        HStack(spacing:0) {
+          Button { debugPrint("Daily tapped"); typ = .dy; dwm = false }
+          label: {
+            if typ == .dy && dwm == false { Image(systemName: "d.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .yellow)
+            } else { Image(systemName: "d.square.fill") }
+          }.disabled(typ == .dy && dwm == false) // true: noninteractive
+
+          Button { print("Weekly tapped"); typ = .wk; dwm = false }
+          label: {
+            if typ == .wk && dwm == false { Image(systemName: "w.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.blue, .pink)
+            } else { Image(systemName: "w.square.fill") }
+          }.disabled(typ == .wk)
+
+          Button { print("Monthly selected"); typ = .mn; dwm = false }
+          label: {
+            if typ == .mn && dwm == false{ Image(systemName: "m.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .green)
+            } else { Image(systemName: "m.square.fill") }
+          }.disabled(typ == .mn)
+
+          Button { print("DWM candle selected"); dwm = true }
+          label: {
+            if dwm == true { Image(systemName: "star.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .green)
+            } else { Image(systemName: "star.square.fill") }
+          }.disabled(dwm == true)
+        }
+      } // toolbar
+  }
+
+}
+
+// MARK: ViewModifier 4
+struct TitleBarMnu: ViewModifier {
+  @Binding var limit: Int
+  @State var txt: String = "Input Num"
+  @State var isShown: Bool = false
+  func body(content: Content) -> some View {
+    content
+      .toolbar { // toolbarTitleMenu
+        ToolbarItem(placement: .primaryAction) {
+          Menu("Num") {
+            Button(action: {
+              limit = CANNUMSMA
+              print("1 tapped")
+            }) {
+              Text(String(CANNUMSMA))
+              if limit == CANNUMSMA {
+                Image(systemName: "1.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.red, .green)
+              } else {
+                Image(systemName: "1.circle.fill")
+              }
+            }
+            Button(action: {
+              limit = CANNUMMID
+              print("2 tapped")
+            }) {
+              Text(String(CANNUMMID))
+              if limit == CANNUMMID {
+                Image(systemName: "2.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.red, .yellow)
+              } else {
+                Image(systemName: "2.circle.fill")
+              }
+            }
+            Button(action: {
+              limit = CANNUMLAR
+              print("3 tapped")
+            }) {
+              Text(String(CANNUMLAR))
+              if limit == CANNUMLAR {
+                Image(systemName: "3.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.blue, .pink)
+              } else {
+                Image(systemName: "3.circle.fill")
+              }
+            }
+          }
+        } // toolbar
+      }
+  }
+}
+
+// MARK: ViewModifier 5
 struct TitleBarBtn2: ViewModifier {
 //  @Binding var typ: Typ
   @EnvironmentObject var env: AppState
@@ -134,7 +234,7 @@ struct TitleBarBtn2: ViewModifier {
   }
 }
 
-// MARK: ViewModifier 4
+// MARK: ViewModifier 6
 struct TitleBarMnu2: ViewModifier {
   @EnvironmentObject var env: AppState
   @State var txt: String = "Input Num"

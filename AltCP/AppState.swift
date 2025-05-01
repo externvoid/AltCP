@@ -9,17 +9,18 @@ class AppState: ObservableObject {
   @Published var limit: Int = CANNUMSMA
   @Published var titleBar: String = ""
   @Published var dwm: Bool = true
-  init() {}
-  init(typ: Typ, limit: Int) {
-    self.typ = typ
-    self.limit = limit
-  }
+  @Published var ticker: String = ""
+//  init() {}
+//  init(typ: Typ, limit: Int) {
+//    self.typ = typ
+//    self.limit = limit
+//  }
 }
 
-class AppState2: ObservableObject {
-  @Published var ticker: String = ""
-  init() {}
-  init(ticker: String) {
-    self.ticker = ticker
-  }
-}
+//class AppState2: ObservableObject {
+//  @Published var ticker: String = ""
+//  init() {}
+//  init(ticker: String) {
+//    self.ticker = ticker
+//  }
+//}

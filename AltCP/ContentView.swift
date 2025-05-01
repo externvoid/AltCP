@@ -9,19 +9,19 @@ struct ContentView: View {
   }
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
-  @EnvironmentObject var env2: AppState2
+//  @EnvironmentObject var env2: AppState2
   var body: some View {
     VStack(spacing: 0.0) {
       if env.dwm {
-        let _ = print("env2.ticker@ContentView: \(env2.ticker.isEmpty ? "empty" : env2.ticker)")
-        dwmPlot(env2.ticker)
+        let _ = print("env2.ticker@ContentView: \(env.ticker.isEmpty ? "empty" : env.ticker)")
+        dwmPlot(env.ticker)
       } else {
         singlePlot()
       }
     }
-    .onChange(of: env2.ticker) { // unreachable
+    .onChange(of: env.ticker) { // unreachable
 //      selStr = env.ticker
-      print("onChange@ContentView: \(env2.ticker)")
+      print("onChange@ContentView: \(env.ticker)")
     }
     .onChange(of: env.typ) { // unreachable
       print("onChange@ContentView: \(env.typ)")
@@ -62,17 +62,17 @@ struct ContentView: View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(Typ.allCases, id: \.id) {typ in
-          StockView(selected: txt.isEmpty ? sels : txt, codes: $codes)
-            .environmentObject(AppState(typ: typ, limit: env.limit))
+          StockView(selected: txt.isEmpty ? sels : txt, typ: typ, codes: $codes)
+//            .environmentObject(AppState(typ: typ, limit: env.limit))
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
         }
       }
     } // ScrollView
-    .modifier(TitleBarMnu2())
-//    .modifier(TitleBarMnu(limit: $env.limit))
-    .modifier(TitleBarBtn2())
-//    .modifier(TitleBarBtn(typ: $env.typ))
+//    .modifier(TitleBarMnu2())
+    .modifier(TitleBarMnu(limit: $env.limit))
+//    .modifier(TitleBarBtn2())
+    .modifier(TitleBarBtn(typ: $env.typ, dwm: $env.dwm))
     .navigationTitle(env.titleBar)
     .task {
       print("codes.count@dwmPlot: \(codes.count)")
@@ -102,11 +102,15 @@ struct StockView: View {
 
   @StateObject var c: VM
   @EnvironmentObject var env: AppState
-  @EnvironmentObject var env2: AppState2
+//  @EnvironmentObject var env2: AppState2
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
    }
+  init(selected: String, typ: Typ, codes: Binding<Array<Array<String>>>){
+    _c = StateObject(wrappedValue: VM(ticker: selected, typ: typ))
+    _codes = codes
+  }
   @Binding var codes: [[String]]// = []
 //  @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
@@ -139,16 +143,16 @@ struct StockView: View {
       c.limit = env.limit
       print("onChange: \(c.limit): c.ar: \(c.ar.count)")
     }
-    .onChange(of: env2.ticker) {
-      c.ticker = env2.ticker
-      print("onChange: \(env2.ticker): c.ar: \(c.ar.count)")
+    .onChange(of: env.ticker) {
+      c.ticker = env.ticker
+      print("onChange: \(env.ticker): c.ar: \(c.ar.count)")
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
       //    initial Value
-      c.typ = env.typ
-      c.limit = env.limit
+//      c.typ = env.typ
+//      c.limit = env.limit
       print("c.typ@onAppear: \(c.typ)")
     }
     .background(
@@ -272,13 +276,13 @@ extension StockView {
     .popover(isPresented: $isShown) {
       ZStack {
 //        Color.white.opacity(0.5)
-//        popUp
-        PopUp2(
-          txt: $txt,
-          isShown: $isShown,
-          scrollPosition: $scrollPosition,
-          items: items
-        )
+        popUp
+//        PopUp2(
+//          txt: $txt,
+//          isShown: $isShown,
+//          scrollPosition: $scrollPosition,
+//          items: items
+//        )
       }
       .frame(width: 300, height: 300)
     }
@@ -298,6 +302,7 @@ extension StockView {
                 //                                selected =
                 c.ticker =
                   items[number].components(separatedBy: ":").first ?? ""
+                env.ticker = c.ticker
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
@@ -340,10 +345,10 @@ extension StockView {
         .onSubmit {
           print("press Enter: \(txt.wrappedValue)")
           if !items.isEmpty {
+            // env.ticker =
             c.ticker =
-//            env.ticker =
             items[0].components(separatedBy: ":").first ?? ""
-//            selsStr = "0000"
+            env.ticker = c.ticker
           }
           isShown = false
         }
@@ -408,5 +413,5 @@ extension StockView {
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)
     .environmentObject(AppState())
-    .environmentObject(AppState2())
+//    .environmentObject(AppState2())
 }
