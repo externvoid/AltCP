@@ -123,7 +123,7 @@ struct TitleBarBtn: ViewModifier {
           label: {
             if dwm == true { Image(systemName: "star.square.fill")
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(.red, .green)
+                .foregroundStyle(.yellow, .blue)
             } else { Image(systemName: "star.square.fill") }
           }.disabled(dwm == true)
         }
