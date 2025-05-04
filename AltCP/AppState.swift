@@ -7,5 +7,6 @@ import Foundation
 class AppState: ObservableObject {
   @Published var typ: Typ = .dy
   @Published var limit: Int = CANNUMSMA
-  @Published var titleBar: String = ""
+  @Published var titleBar: String = "browse history"
+  @Published var his: Bool = true
 }

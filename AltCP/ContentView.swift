@@ -13,6 +13,7 @@ struct ContentView: View {
       singlePlot(text)
     } else {
       let _ = print("\n <-- Start Plot\n")
+      let _ = print("selStr: \(selStr), sels: \(sels.count)")
       multiPlot()
     }
   }
@@ -24,6 +25,7 @@ struct ContentView: View {
           StockView(selected: e, codes: $codes)
             .onLongPressGesture {
               selection = e
+              env.his.toggle()
             }
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
@@ -52,6 +54,7 @@ struct ContentView: View {
     StockView(selected: text, codes: $codes)
       .onLongPressGesture {
         selection = nil
+        env.his.toggle()
       }
       .modifier(TitleBarMnu(limit: $env.limit))
       .modifier(TitleBarBtn(typ: $env.typ))
@@ -91,7 +94,7 @@ struct StockView: View {
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
-    print("selected: \(selected)")
+    print("selected@StockView.init: \(selected)")
    }
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
@@ -115,7 +118,6 @@ struct StockView: View {
     }
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      if selStr.isEmpty { selStr = c.ticker } else { selStr += ("," + c.ticker) }
       let tickers = selStr.components(separatedBy: ",")
       if !tickers.contains(c.ticker) {  // 重複チェック
         if selStr.isEmpty {
@@ -123,7 +125,7 @@ struct StockView: View {
         } else {
           selStr += ("," + c.ticker)
         }
-        selStr = makeLimitedCodesContaingStr(selStr)
+//        selStr = makeLimitedCodesContaingStr(selStr)
         UserDefaults.standard.set(selStr, forKey: "foo")
       }
     }
@@ -251,8 +253,12 @@ extension StockView {
               Button(action: {
                 scrollPosition = number
                 //                                selected =
-                c.ticker =
-                  items[number].components(separatedBy: ":").first ?? ""
+                let t = items[number].components(separatedBy: ":").first ?? ""
+                if env.his {
+                  selStr += "," + t
+                } else {
+                  c.ticker = t
+                }
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
@@ -295,9 +301,15 @@ extension StockView {
         .onSubmit {
           print("press Enter: \(txt.wrappedValue)")
           if !items.isEmpty {
-            c.ticker =
-            items[0].components(separatedBy: ":").first ?? ""
+            let t = items[0].components(separatedBy: ":").first ?? ""
+            if env.his {
+              selStr += "," + t
+            } else {
+              c.ticker = t
+            }
           }
+//            c.ticker =
+//            selStr += "," + (items[0].components(separatedBy: ":").first ?? "")
           isShown = false
         }
       Spacer()
