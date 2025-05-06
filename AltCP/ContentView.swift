@@ -118,16 +118,29 @@ struct StockView: View {
     }
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-      let tickers = selStr.components(separatedBy: ",")
-      if !tickers.contains(c.ticker) {  // 重複チェック
-        if selStr.isEmpty {
-          selStr = c.ticker
-        } else {
-          selStr += ("," + c.ticker)
-        }
+//      if let a = makeSelStr(sels.ar, c.ticker) { selStr = a }
+
+//      var ar: [String] = Array(sels.ar)
+//      let t = ar.joined(separator: ",")
+//      if !t.contains(c.ticker) {  // 重複チェック
+//        if ar.count >= MAXSIZE {
+//          ar.remove(at: 0)
+//          selStr = ar.joined(separator: ",") + c.ticker
+//        } else {
+//          selStr = t + c.ticker
+//        }
+
+
+//      let tickers = selStr.components(separatedBy: ",")
+//      if !tickers.contains(c.ticker) {  // 重複チェック
+//        if selStr.isEmpty {
+//          selStr = c.ticker
+//        } else {
+//          selStr += ("," + c.ticker)
+//        }
 //        selStr = makeLimitedCodesContaingStr(selStr)
-        UserDefaults.standard.set(selStr, forKey: "foo")
-      }
+//        UserDefaults.standard.set(selStr, forKey: "foo")
+//      }
     }
     .onChange(of: env.typ) { c.typ = env.typ }
     .onChange(of: env.limit) { c.limit = env.limit }
@@ -254,11 +267,9 @@ extension StockView {
                 scrollPosition = number
                 //                                selected =
                 let t = items[number].components(separatedBy: ":").first ?? ""
-                if env.his {
-                  selStr += "," + t
-                } else {
-                  c.ticker = t
-                }
+                if let a = makeSelStr(sels.ar, t) { selStr = a }
+                if !env.his { c.ticker = t }
+                // selStr += "," + t
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
@@ -303,7 +314,10 @@ extension StockView {
           if !items.isEmpty {
             let t = items[0].components(separatedBy: ":").first ?? ""
             if env.his {
-              selStr += "," + t
+              if let a = makeSelStr(sels.ar, t) {
+                selStr = a
+              }
+//              selStr += "," + t
             } else {
               c.ticker = t
             }
@@ -362,6 +376,24 @@ extension StockView {
     } else {
       return "Not Found"
     }
+  }
+
+  // MARK: makeSelStr
+  func makeSelStr(_ ar: [String], _ choice: String) -> String? {
+    let selStr: String
+    var br: [String] = Array(ar)
+    let t = ar.joined(separator: ",")
+    if !t.contains(choice) {  // 重複チェック
+      if ar.count >= MAXSIZE {
+        br.remove(at: 0)
+        selStr = br.joined(separator: ",") + "," + choice
+      } else {
+        selStr = t + "," + choice
+      }
+      UserDefaults.standard.set(selStr, forKey: "foo")
+      return selStr
+    }
+    return nil
   }
 }
 
