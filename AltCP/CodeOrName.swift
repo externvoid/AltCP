@@ -14,9 +14,6 @@ extension StockView {
           ListItemView(c: c, isShown: $isShown, n: n, title: items[n])
             .listRowInsets(.init())
         }
-        //        }
-        //      .task { ar = await fetchCodeTbl(url) }
-        //      .task { if ar.isEmpty { ar = await fetchCodeTbl(url) } }
       }
     }
 //    .listStyle(.plain)
@@ -41,14 +38,6 @@ extension StockView {
   }
 } // extention
 
-//struct ContentView0: View {  // for playground
-//  //  @State var txt: String = ""
-//  @State var code: String = ""
-//  @StateObject var c: VM = .init()  // Candle is in Sources
-//  var body: some View {
-//    popUp2
-//  }
-//}
 #Preview {
   @Previewable @State var sels: String = "0000"
   VStack(spacing: 0.0) {

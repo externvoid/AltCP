@@ -10,17 +10,4 @@ class AppState: ObservableObject {
   @Published var titleBar: String = ""
   @Published var dwm: Bool = true
   @Published var ticker: String = ""
-//  init() {}
-//  init(typ: Typ, limit: Int) {
-//    self.typ = typ
-//    self.limit = limit
-//  }
 }
-
-//class AppState2: ObservableObject {
-//  @Published var ticker: String = ""
-//  init() {}
-//  init(ticker: String) {
-//    self.ticker = ticker
-//  }
-//}

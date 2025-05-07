@@ -9,7 +9,6 @@ struct ContentView: View {
   }
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
-//  @EnvironmentObject var env2: AppState2
   var body: some View {
     VStack(spacing: 0.0) {
       if env.dwm {
@@ -32,14 +31,8 @@ struct ContentView: View {
   }
   func singlePlot() -> some View {
     StockView(selected: sels, codes: $codes)
-//      .onChange(of: env.typ) { old, newValue in
-//        print("env.typ changed to \(newValue)@single Plot")
-//      }
-//      .environmentObject(AppState(env.typ))
       .modifier(TitleBarMnu2())
-//      .modifier(TitleBarMnu(limit: $env.limit))
       .modifier(TitleBarBtn2())
-    //    .modifier(TitleBarBtn(typ: $env.typ))
       .navigationTitle(env.titleBar)
       .task {
         print("codes.count@SinglePlot: \(codes.count)")
@@ -56,23 +49,21 @@ struct ContentView: View {
       }
       .padding(.bottom, 4.5)
       .padding([.top, .leading, .trailing], 3)
-//      .environmentObject(AppState(.wk))
   }
   func dwmPlot(_ txt: String) -> some View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(Typ.allCases, id: \.id) {typ in
           StockView(selected: txt.isEmpty ? sels : txt, typ: typ, codes: $codes)
-//            .environmentObject(AppState(typ: typ, limit: env.limit))
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
         }
       }
     } // ScrollView
-//    .modifier(TitleBarMnu2())
-    .modifier(TitleBarMnu(limit: $env.limit))
-//    .modifier(TitleBarBtn2())
-    .modifier(TitleBarBtn(typ: $env.typ, dwm: $env.dwm))
+    .modifier(TitleBarMnu2())
+    .modifier(TitleBarBtn2())
+//    .modifier(TitleBarMnu(limit: $env.limit))
+//    .modifier(TitleBarBtn(typ: $env.typ, dwm: $env.dwm))
     .navigationTitle(env.titleBar)
     .task {
       print("codes.count@dwmPlot: \(codes.count)")
@@ -95,14 +86,12 @@ struct ContentView: View {
 /// - Description: chart wrapper
 /// - Parameter selected: ticker code
 struct StockView: View {
-//  @EnvironmentObject var appState: AppState  // 無視
   @State var isShown: Bool = false
   @State var hoLoc: CGPoint = .zero
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
   @EnvironmentObject var env: AppState
-//  @EnvironmentObject var env2: AppState2
   init(selected: String, codes: Binding<Array<Array<String>>>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
@@ -110,10 +99,8 @@ struct StockView: View {
   init(selected: String, typ: Typ, codes: Binding<Array<Array<String>>>){
     _c = StateObject(wrappedValue: VM(ticker: selected, typ: typ))
     _codes = codes
-//    env.typ = typ
   }
   @Binding var codes: [[String]]// = []
-//  @State var codes: [[String]] = []
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
   @State var isLoading: Bool = false
@@ -133,7 +120,6 @@ struct StockView: View {
       }
     }  // geo
     .onChange(of: c.ticker) {
-//      env.ticker = c.ticker
       print("onChange@StockView: \(c.ticker): c.ar: \(c.ar.count)")
       UserDefaults.standard.set(c.ticker, forKey: "foo")
     }
@@ -145,11 +131,6 @@ struct StockView: View {
       c.limit = env.limit
       print("onChange: \(c.limit): c.ar: \(c.ar.count)")
     }
-//    .onChange(of: env.dwm) {
-//      c.typ = env.typ
-//      c.limit = env.limit
-//      print("onChange: \(env.dwm): c.ar: \(c.ar.count)")
-//    }
     .onChange(of: env.ticker) {
       c.ticker = env.ticker
       print("onChange: \(env.ticker): c.ar: \(c.ar.count)")
@@ -157,21 +138,17 @@ struct StockView: View {
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
-      //    initial Value
       if !env.dwm {
-              c.typ = env.typ
-              c.limit = env.limit
+        c.typ = env.typ
+        c.limit = env.limit
       }
       print("c.typ@onAppear: \(c.typ)")
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
-//    .padding([.bottom], 1.5) // eliminate focusable frame lack at bottom
-//    .modifier(TitleBarMnu(limit: $c.limit))
-//    .modifier(TitleBarBtn(typ: $c.typ))
-//    .navigationTitle(c.ticker)
   }  // body
 }  // View
+
 extension StockView {
 // MARK: chart
   func chart(fsize: CGSize) -> some View {
@@ -199,12 +176,7 @@ extension StockView {
       var str: String {
         if !c.ar.isEmpty {
           let v = c.ar[i].volume.formatNumber
-//          let v = Int(c.ar[i].volume)
           let d = c.ar[i].date
-//          let o = String(format: "%.1f", c.ar[i].open)
-//          let h = String(format: "%.1f", c.ar[i].high)
-//          let l = String(format: "%.1f", c.ar[i].low)
-//          let cl = String(format: "%.1f", c.ar[i].close)
           let o = c.ar[i].open.formatNumber
           let h = c.ar[i].high.formatNumber
           let l = c.ar[i].low.formatNumber
@@ -225,31 +197,21 @@ extension StockView {
       }
       Spacer()
       HStack {
-        //        Text("hoLoc.x: \(hoLoc.x)")
         Text(str)
-          //        Text("d: \(d) v: \(v)")  // fix wrong volume
           .font(.system(size: 10.5, design: .monospaced))
           .foregroundColor(.yellow.opacity(0.6))
           .offset(y: -12)
         Spacer()
       }
-      //          .offset(x: -fsize.width + 45, y: -fsize.height + 28)
-      //          .border(.green.opacity(0.6), width: 1)
-      //        candle(fsize: hsize)
-      //          .border(.orange.opacity(0.6), width: 1)
     }
   }  // dateOHLCV
 }
 
 // MARK: Shape
 struct CursorLine: Shape {
-  //  @Binding var hoLoc: CGPoint
   var hoLoc: CGPoint
   func path(in rect: CGRect) -> Path {
     var path = Path()
-    //    print("rect.minY: \(rect.minY)")
-    //    print("rect.maxY: \(rect.maxY )")
-    //    print("hoLoc: \(hoLoc)")
     path.move(to: CGPoint(x: hoLoc.x, y: rect.minY))
     path.addLine(to: CGPoint(x: hoLoc.x, y: rect.maxY))
     return path
@@ -266,16 +228,11 @@ extension StockView {
       },
       label: {
         ZStack {
-          //        Color(nsColor: .windowBackgroundColor)
-          //          .frame(width: 60, height: 60)
           Image(systemName: "plus.circle")
             .resizable()
             .frame(width: 30, height: 30)
-            //            .imageScale(.large)
-            //            .foregroundStyle(.tint)
             .foregroundStyle(
               Color(.green.opacity(0.4))
-//              Color(red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3)
             )
             .symbolEffect(.bounce, value: isShown)
         }
@@ -284,14 +241,7 @@ extension StockView {
     .buttonStyle(PlainButtonStyle())
     .popover(isPresented: $isShown) {
       ZStack {
-//        Color.white.opacity(0.5)
         popUp
-//        PopUp2(
-//          txt: $txt,
-//          isShown: $isShown,
-//          scrollPosition: $scrollPosition,
-//          items: items
-//        )
       }
       .frame(width: 300, height: 300)
     }
@@ -304,33 +254,22 @@ extension StockView {
 
         ScrollView {
           LazyVStack(spacing:0) {
-            //            ForEach(0..<1000, id: \.self) { number in
             ForEach(0..<items.count, id: \.self) { number in
               Button(action: {
                 scrollPosition = number
-                //                                selected =
                 c.ticker =
                   items[number].components(separatedBy: ":").first ?? ""
                 env.ticker = c.ticker
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
                 isShown = false
-                //                isLoading = true
               }) {
-//                VStack(spacing:0) {
                   Text(items[number])
                   .fontDesign(.monospaced)
                     .frame(width: 260, height: 20, alignment: .topLeading)
                     .lineLimit(1)
-//                    .allowsTightening(true)
-//                    .minimumScaleFactor(0.9)
-//                    .truncationMode(.tail)
-//                    .padding(.leading, 10)
                     .foregroundColor(.blue)
-//                    .frame(alignment: .leading)
-//                } //.frame(width: 200, height: 20, alignment: .leading)
               }
-//              .buttonStyle(PlainButtonStyle())
               .background(Color.black.opacity(0.7))
               .id(number)
             }  // For
@@ -346,7 +285,6 @@ extension StockView {
     .padding()
   }  // popUp
 // MARK: textBox in popUp
-//  func textBox() -> some View { // arg txtは必要?
     func textBox(txt: Binding<String>) -> some View {
     HStack {
       Spacer()
@@ -418,9 +356,12 @@ extension StockView {
   ContentView()
     .navigationTitle("ooPs")
     .frame(width: 420, height: 360*1)
-//    .frame(width: 200, height: 200)
     .padding([.top, .leading, .trailing], 5)
     .padding([.bottom], 7)
     .environmentObject(AppState())
-//    .environmentObject(AppState2())
 }
+// ???: xx
+// !!!: xx
+// MARK: xx
+// TODO: xx
+// FIXME: xx
