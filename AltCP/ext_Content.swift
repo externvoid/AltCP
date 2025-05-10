@@ -126,7 +126,8 @@ extension StockView {
             at: CGPoint(x: 0.0, y: 0.0), anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
           print("notFound")
         }
-    }
+      case .all: break
+    } // switch
   }
 
   // MARK: - draw 縦軸目盛り線キャプション+横線 & 銘柄コード、銘柄名、特徴

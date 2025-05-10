@@ -10,8 +10,12 @@ struct ContentView: View {
   @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
   var body: some View {
+    soloCodePlot()
+  }
+  
+  func soloCodePlot() -> some View {
     VStack(spacing: 0.0) {
-      if env.dwm {
+      if env.typ == .all {
         let _ = print("env.ticker@ContentView: \(env.ticker.isEmpty ? "empty" : env.ticker)")
         dwmPlot(env.ticker)
       } else {
@@ -19,16 +23,14 @@ struct ContentView: View {
       }
     }
     .onChange(of: env.ticker) { // unreachable
-//      selStr = env.ticker
+      //      selStr = env.ticker
       print("onChange@ContentView: \(env.ticker)")
     }
     .onChange(of: env.typ) { // unreachable
       print("onChange@ContentView: \(env.typ)")
     }
-    .onChange(of: env.dwm) {
-      print("onChange@ContentView: \(env.dwm)")
-    }
   }
+
   func singlePlot() -> some View {
     StockView(selected: sels, codes: $codes)
       .modifier(TitleBarMnu2())
@@ -138,7 +140,7 @@ struct StockView: View {
     }
     .onAppear {
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
-      if !env.dwm {
+      if env.typ != .all {
         c.typ = env.typ
         c.limit = env.limit
       }

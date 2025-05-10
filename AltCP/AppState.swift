@@ -8,6 +8,6 @@ class AppState: ObservableObject {
   @Published var typ: Typ = .dy
   @Published var limit: Int = CANNUMSMA
   @Published var titleBar: String = ""
-  @Published var dwm: Bool = true
+//  @Published var dwm: Bool = true
   @Published var ticker: String = ""
 }
