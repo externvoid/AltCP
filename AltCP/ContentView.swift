@@ -22,6 +22,19 @@ struct ContentView: View {
         singlePlot()
       }
     }
+    .task {
+      print("codes.count@SinglePlot: \(codes.count)")
+      if codes.isEmpty {
+        do {
+          codes = try await Networker.queryCodeTbl(
+            DBPath.dbPath(1),
+            DBPath.dbPath(2))
+          print("ContentView: \(codes.count)")
+        } catch {
+          print("error@ContentView: \(error)")
+        }
+      }
+    }
     .onChange(of: env.ticker) { // unreachable
       //      selStr = env.ticker
       print("onChange@ContentView: \(env.ticker)")
@@ -36,26 +49,27 @@ struct ContentView: View {
       .modifier(TitleBarMnu2())
       .modifier(TitleBarBtn2())
       .navigationTitle(env.titleBar)
-      .task {
-        print("codes.count@SinglePlot: \(codes.count)")
-        if codes.isEmpty {
-          do {
-            codes = try await Networker.queryCodeTbl(
-              DBPath.dbPath(1),
-              DBPath.dbPath(2))
-            print("ContentView: \(codes.count)")
-          } catch {
-            print("error@ContentView: \(error)")
-          }
-        }
-      }
+//      .task {
+//        print("codes.count@SinglePlot: \(codes.count)")
+//        if codes.isEmpty {
+//          do {
+//            codes = try await Networker.queryCodeTbl(
+//              DBPath.dbPath(1),
+//              DBPath.dbPath(2))
+//            print("ContentView: \(codes.count)")
+//          } catch {
+//            print("error@ContentView: \(error)")
+//          }
+//        }
+//      }
       .padding(.bottom, 4.5)
       .padding([.top, .leading, .trailing], 3)
   }
   func dwmPlot(_ txt: String) -> some View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
-        ForEach(Typ.allCases, id: \.id) {typ in
+        ForEach([Typ.dy, Typ.wk, Typ.mn], id: \.id) {typ in
+//      ForEach(Typ.allCases, id: \.id) {typ in
           StockView(selected: txt.isEmpty ? sels : txt, typ: typ, codes: $codes)
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
@@ -67,19 +81,19 @@ struct ContentView: View {
 //    .modifier(TitleBarMnu(limit: $env.limit))
 //    .modifier(TitleBarBtn(typ: $env.typ, dwm: $env.dwm))
     .navigationTitle(env.titleBar)
-    .task {
-      print("codes.count@dwmPlot: \(codes.count)")
-      if codes.isEmpty {
-        do {
-          codes = try await Networker.queryCodeTbl(
-            DBPath.dbPath(1),
-            DBPath.dbPath(2))
-          print("ContentView: \(codes.count)")
-        } catch {
-          print("error@ContentView: \(error)")
-        }
-      }
-    }
+//    .task {
+//      print("codes.count@dwmPlot: \(codes.count)")
+//      if codes.isEmpty {
+//        do {
+//          codes = try await Networker.queryCodeTbl(
+//            DBPath.dbPath(1),
+//            DBPath.dbPath(2))
+//          print("ContentView: \(codes.count)")
+//        } catch {
+//          print("error@ContentView: \(error)")
+//        }
+//      }
+//    }
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
