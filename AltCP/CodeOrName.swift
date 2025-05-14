@@ -40,8 +40,9 @@ extension StockView {
 
 #Preview {
   @Previewable @State var sels: String = "0000"
+  @Previewable @State var selection: String? = "0000"
   VStack(spacing: 0.0) {
-    StockView(selected: sels, codes: .constant([["0000"]]))
+    StockView(selected: sels, codes: .constant([["0000"]]), selection: $selection)
       .frame(width: 400 , height: 260)
     //      StockView(selected: $sels[0])
   }
