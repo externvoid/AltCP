@@ -22,10 +22,10 @@ struct ContentView: View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(sels.ar, id: \.self) {e in
-          StockView(selected: e, codes: $codes)
+          StockView(selected: e, codes: $codes, selection: $selection)
             .onLongPressGesture {
               selection = e
-              env.his.toggle()
+//              env.his.toggle()
             }
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
@@ -51,10 +51,10 @@ struct ContentView: View {
     .padding([.top, .leading, .trailing], 3)
   }
   private func singlePlot(_ text: String) -> some View {
-    StockView(selected: text, codes: $codes)
+    StockView(selected: text, codes: $codes, selection: $selection)
       .onLongPressGesture {
         selection = nil
-        env.his.toggle()
+//        env.his.toggle()
       }
       .modifier(TitleBarMnu(limit: $env.limit))
       .modifier(TitleBarBtn(typ: $env.typ))
@@ -89,11 +89,14 @@ struct StockView: View {
 
   @StateObject var c: VM
   @Binding var codes: [[String]]
+  @Binding var selection: String?
   @EnvironmentObject var env: AppState
   @State var titleBar: String = ""
-  init(selected: String, codes: Binding<Array<Array<String>>>){
+  init(selected: String, codes: Binding<Array<Array<String>>>,
+       selection: Binding<String?>){
      _c = StateObject(wrappedValue: VM(ticker: selected))
      _codes = codes
+    _selection = selection
     print("selected@StockView.init: \(selected)")
    }
   @State var scrollPosition: Int? = 0
@@ -268,7 +271,8 @@ extension StockView {
                 //                                selected =
                 let t = items[number].components(separatedBy: ":").first ?? ""
                 if let a = makeSelStr(sels.ar, t) { selStr = a }
-                if !env.his { c.ticker = t }
+                if let _ = selection { c.ticker = t }
+//              if !env.his { c.ticker = t }
                 // selStr += "," + t
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
@@ -313,7 +317,8 @@ extension StockView {
           print("press Enter: \(txt.wrappedValue)")
           if !items.isEmpty {
             let t = items[0].components(separatedBy: ":").first ?? ""
-            if env.his {
+            if selection == nil {
+//          if env.his {
               if let a = makeSelStr(sels.ar, t) {
                 selStr = a
               }

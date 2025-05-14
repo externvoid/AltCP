@@ -11,10 +11,11 @@ struct AltCPApp: App {
           #endif
           //        WindowGroup("ChartPlot") {
           ContentView()
+          .environmentObject(AppState())
 //            .navigationTitle("ChartPlot")
           .frame(minWidth: 500, minHeight: 400)
         }
-        .environmentObject(appState)
+//        .environmentObject(AppState())
 //        .windowStyle(HiddenTitleBarWindowStyle())
     }
 }
