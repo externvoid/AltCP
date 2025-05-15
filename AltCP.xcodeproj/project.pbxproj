@@ -13,9 +13,7 @@
 		879469312DB783F600957C34 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469202DB783F600957C34 /* AppState.swift */; };
 		879469322DB783F600957C34 /* ext_VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469282DB783F600957C34 /* ext_VM.swift */; };
 		879469332DB783F600957C34 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692E2DB783F600957C34 /* VM.swift */; };
-		879469342DB783F600957C34 /* CodeOrName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469232DB783F600957C34 /* CodeOrName.swift */; };
 		879469352DB783F600957C34 /* DBPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469252DB783F600957C34 /* DBPath.swift */; };
-		879469362DB783F600957C34 /* PlotWrapper2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692C2DB783F600957C34 /* PlotWrapper2.swift */; };
 		879469372DB783F600957C34 /* mod_ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794692B2DB783F600957C34 /* mod_ContentView.swift */; };
 		879469382DB783F600957C34 /* glob_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879469292DB783F600957C34 /* glob_.swift */; };
 		879469392DB783F600957C34 /* AltCPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8794691F2DB783F600957C34 /* AltCPApp.swift */; };
@@ -214,9 +212,7 @@
 				879469312DB783F600957C34 /* AppState.swift in Sources */,
 				879469322DB783F600957C34 /* ext_VM.swift in Sources */,
 				879469332DB783F600957C34 /* VM.swift in Sources */,
-				879469342DB783F600957C34 /* CodeOrName.swift in Sources */,
 				879469352DB783F600957C34 /* DBPath.swift in Sources */,
-				879469362DB783F600957C34 /* PlotWrapper2.swift in Sources */,
 				879469372DB783F600957C34 /* mod_ContentView.swift in Sources */,
 				879469382DB783F600957C34 /* glob_.swift in Sources */,
 				879469392DB783F600957C34 /* AltCPApp.swift in Sources */,

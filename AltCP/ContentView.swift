@@ -61,15 +61,10 @@ struct StockView: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
-  var codes: [[String]] { env.codes }
-  @EnvironmentObject var env: AppState
+  @EnvironmentObject var env: AppState; var codes: [[String]] { env.codes }
   @State var titleBar: String = ""
-//  init(selected: String, selection: Binding<String?>){
-//     _c = StateObject(wrappedValue: VM(ticker: selected))
-//    print("selected@StockView.init: \(selected)")
-//   }
+  // MARK: init
   init(selection: Binding<String?>, typ: Typ){
-//    _c = StateObject(wrappedValue: VM(ticker: selection.wrappedValue!))
     _c = StateObject(wrappedValue: VM(ticker: selection.wrappedValue!,typ: typ))
     print("selected@StockView.init: \(selection.wrappedValue ?? "nil")")
   }
@@ -95,29 +90,6 @@ struct StockView: View {
     }
     .onChange(of: c.ticker) {
       print("onChange: \(c.ticker): c.ar: \(c.ar.count)")
-//      if let a = makeSelStr(sels.ar, c.ticker) { selStr = a }
-
-//      var ar: [String] = Array(sels.ar)
-//      let t = ar.joined(separator: ",")
-//      if !t.contains(c.ticker) {  // 重複チェック
-//        if ar.count >= MAXSIZE {
-//          ar.remove(at: 0)
-//          selStr = ar.joined(separator: ",") + c.ticker
-//        } else {
-//          selStr = t + c.ticker
-//        }
-
-
-//      let tickers = selStr.components(separatedBy: ",")
-//      if !tickers.contains(c.ticker) {  // 重複チェック
-//        if selStr.isEmpty {
-//          selStr = c.ticker
-//        } else {
-//          selStr += ("," + c.ticker)
-//        }
-//        selStr = makeLimitedCodesContaingStr(selStr)
-//        UserDefaults.standard.set(selStr, forKey: "foo")
-//      }
     }
     .onChange(of: env.typ) { c.typ = env.typ }
     .onChange(of: env.limit) { c.limit = env.limit }
@@ -383,3 +355,10 @@ extension StockView {
     .padding([.bottom], 7)
     .environmentObject(AppState())
 }
+// ???: xx
+// !!!: xx
+// MARK:
+// TODO:
+// FIXME:
+// ???:
+// !!!:
