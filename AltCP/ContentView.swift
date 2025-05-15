@@ -5,11 +5,9 @@ import SwiftUI
 struct ContentView: View {
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301,130A"
   var sels: Queue<String> { str2Que(selStr) }
-  @State var codes: [[String]] = []
   @EnvironmentObject var env: AppState
-  @State var selection: String? = nil
   var body: some View {
-    if let text = selection {
+    if let text = env.selection {
       singlePlot(text)
     } else {
       let _ = print("\n <-- Start Plot\n")
@@ -22,10 +20,9 @@ struct ContentView: View {
     ScrollView(.vertical) {
       LazyVGrid(columns: columns, spacing: 10) {
         ForEach(sels.ar, id: \.self) {e in
-          StockView(selected: e, codes: $codes, selection: $selection)
+          StockView(selection: .constant(e), typ: env.typ)
             .onLongPressGesture {
-              selection = e
-//              env.his.toggle()
+              env.selection = e
             }
             .frame(height: CHARTWIDTH*0.75)
             .padding(5)
@@ -35,42 +32,18 @@ struct ContentView: View {
     .modifier(TitleBarMnu(limit: $env.limit))
     .modifier(TitleBarBtn(typ: $env.typ))
     .navigationTitle(env.titleBar)
-    .task {
-      if codes.isEmpty {
-        do {
-          codes = try await Networker.queryCodeTbl(
-            DBPath.dbPath(1),
-            DBPath.dbPath(2))
-          print("codes.countContentView: \(codes.count)")
-        } catch {
-          print("error@ContentView: \(error)")
-        }
-      }
-    }
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
   private func singlePlot(_ text: String) -> some View {
-    StockView(selected: text, codes: $codes, selection: $selection)
+    StockView(selection: $env.selection, typ: env.typ)
+//    StockView(selected: text, selection: $env.selection)
       .onLongPressGesture {
-        selection = nil
-//        env.his.toggle()
+        env.selection = nil
       }
       .modifier(TitleBarMnu(limit: $env.limit))
       .modifier(TitleBarBtn(typ: $env.typ))
       .navigationTitle(env.titleBar)
-      .task {
-        if codes.isEmpty {
-          do {
-            codes = try await Networker.queryCodeTbl(
-              DBPath.dbPath(1),
-              DBPath.dbPath(2))
-            print("codes.countContentView: \(codes.count)")
-          } catch {
-            print("error@ContentView: \(error)")
-          }
-        }
-      }
       .padding(.bottom, 4.5)
       .padding([.top, .leading, .trailing], 3)
   }
@@ -88,17 +61,18 @@ struct StockView: View {
   @State var oldLoc: CGPoint = .zero
 
   @StateObject var c: VM
-  @Binding var codes: [[String]]
-  @Binding var selection: String?
+  var codes: [[String]] { env.codes }
   @EnvironmentObject var env: AppState
   @State var titleBar: String = ""
-  init(selected: String, codes: Binding<Array<Array<String>>>,
-       selection: Binding<String?>){
-     _c = StateObject(wrappedValue: VM(ticker: selected))
-     _codes = codes
-    _selection = selection
-    print("selected@StockView.init: \(selected)")
-   }
+//  init(selected: String, selection: Binding<String?>){
+//     _c = StateObject(wrappedValue: VM(ticker: selected))
+//    print("selected@StockView.init: \(selected)")
+//   }
+  init(selection: Binding<String?>, typ: Typ){
+//    _c = StateObject(wrappedValue: VM(ticker: selection.wrappedValue!))
+    _c = StateObject(wrappedValue: VM(ticker: selection.wrappedValue!,typ: typ))
+    print("selected@StockView.init: \(selection.wrappedValue ?? "nil")")
+  }
   @State var scrollPosition: Int? = 0
   @State var txt: String = ""  // 検索key
   @State var isLoading: Bool = false
@@ -271,8 +245,7 @@ extension StockView {
                 //                                selected =
                 let t = items[number].components(separatedBy: ":").first ?? ""
                 if let a = makeSelStr(sels.ar, t) { selStr = a }
-                if let _ = selection { c.ticker = t }
-//              if !env.his { c.ticker = t }
+                if let _ = env.selection { c.ticker = t }
                 // selStr += "," + t
                 print("tapped \(scrollPosition!)")
                 print("tapped \(items[number])")
@@ -317,8 +290,7 @@ extension StockView {
           print("press Enter: \(txt.wrappedValue)")
           if !items.isEmpty {
             let t = items[0].components(separatedBy: ":").first ?? ""
-            if selection == nil {
-//          if env.his {
+            if env.selection == nil {
               if let a = makeSelStr(sels.ar, t) {
                 selStr = a
               }

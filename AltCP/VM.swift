@@ -102,6 +102,11 @@ public class VM: ObservableObject {
 //    }
 
   }
+  public init(ticker: String, typ: Typ) {
+    self.ticker = ticker
+    self.typ = typ
+    print("--- init(ticker, typ:)@VM ticker: \(ticker), typ: \(typ) ---")
+  }
 
   public var max: Double {
     ar.reduce(into: -Double.infinity) { r, e in
