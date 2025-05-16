@@ -174,19 +174,3 @@ extension StockView {
   }
 }
 
-#Preview {
-  ContentView()
-    .navigationTitle("ooPs")
-    .frame(width: 420, height: 360*1)
-//    .frame(width: 200, height: 200)
-    .padding([.top, .leading, .trailing], 5)
-    .padding([.bottom], 7)
-    .environmentObject(AppState())
-}
-// ???: xx
-// !!!: xx
-// MARK:
-// TODO:
-// FIXME:
-// ???:
-// !!!:

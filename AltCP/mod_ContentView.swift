@@ -196,6 +196,102 @@ struct TitleBarMnu: ViewModifier {
         } // toolbar
       }
   }
-
 }
 //[swift - SwiftUI Add TextField to Menu - Stack Overflow](https://stackoverflow.com/questions/74061120/swiftui-add-textfield-to-menu)
+// MARK: ViewModifier 5
+struct TitleBarBtn2: ViewModifier {
+  @EnvironmentObject var env: AppState
+  func body(content: Content) -> some View {
+    content
+      .toolbar {
+        HStack(spacing:0) {
+          Button { debugPrint("Daily tapped"); env.typ = .dy }
+          label: {
+            if env.typ == .dy { Image(systemName: "d.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .yellow)
+            } else { Image(systemName: "d.square.fill") }
+          }.disabled(env.typ == .dy) // true: noninteractive
+
+          Button { print("Weekly tapped"); env.typ = .wk }
+          label: {
+            if env.typ == .wk { Image(systemName: "w.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.blue, .pink)
+            } else { Image(systemName: "w.square.fill") }
+          }.disabled(env.typ == .wk)
+
+          Button { print("Monthly selected"); env.typ = .mn }
+          label: {
+            if env.typ == .mn { Image(systemName: "m.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.red, .green)
+            } else { Image(systemName: "m.square.fill") }
+          }.disabled(env.typ == .mn)
+
+          Button { print("DWM candle selected"); env.typ = .all }
+          label: {
+            if env.typ == .all { Image(systemName: "star.square.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.yellow, .blue)
+            } else { Image(systemName: "star.square.fill") }
+          }.disabled(env.typ == .all)
+        }
+      } // toolbar
+  }
+}
+
+// MARK: ViewModifier 6
+struct TitleBarMnu2: ViewModifier {
+  @EnvironmentObject var env: AppState
+  @State var txt: String = "Input Num"
+  @State var isShown: Bool = false
+  func body(content: Content) -> some View {
+    content
+      .toolbar { // toolbarTitleMenu
+        ToolbarItem(placement: .primaryAction) {
+          Menu("Num") {
+            Button(action: {
+              env.limit = CANNUMSMA
+              print("1 tapped")
+            }) {
+              Text(String(CANNUMSMA))
+              if env.limit == CANNUMSMA {
+                Image(systemName: "1.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.red, .green)
+              } else {
+                Image(systemName: "1.circle.fill")
+              }
+            }
+            Button(action: {
+              env.limit = CANNUMMID
+              print("2 tapped")
+            }) {
+              Text(String(CANNUMMID))
+              if env.limit == CANNUMMID {
+                Image(systemName: "2.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.red, .yellow)
+              } else {
+                Image(systemName: "2.circle.fill")
+              }
+            }
+            Button(action: {
+              env.limit = CANNUMLAR
+              print("3 tapped")
+            }) {
+              Text(String(CANNUMLAR))
+              if env.limit == CANNUMLAR {
+                Image(systemName: "3.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.blue, .pink)
+              } else {
+                Image(systemName: "3.circle.fill")
+              }
+            }
+          }
+        } // toolbar
+      }
+  }
+}

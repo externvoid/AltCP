@@ -11,7 +11,9 @@ public typealias candle = (
   close: Double, volume: Double
 )
 public typealias xtick = (date: Date?, norm: Int, st: Bool)
-public enum Typ: Int { case dy = 0; case wk = 1; case mn = 2 }
+//public enum Typ: Int { case dy = 0; case wk = 1; case mn = 2 }
+public enum Typ: Int { case dy = 0, wk, mn, all
+  var id: Int { rawValue } }
 
 // MARK: VM
 @MainActor
@@ -32,6 +34,7 @@ public class VM: ObservableObject {
           ar = Array(wk.suffix(limit))
         case .mn:
         ar = Array(mn.suffix(limit))
+        case .all: break
       }
     }
   }

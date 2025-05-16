@@ -118,6 +118,7 @@ extension StockView {
             at: CGPoint(x: 0.0, y: 0.0), anchor: UnitPoint(x: 0.0, y: 0.0))  //.bottomLeading)
           print("notFound")
         }
+      case .all: break
     }
   }
 

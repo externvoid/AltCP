@@ -1,3 +1,11 @@
+
+📅2025/05/16Fr
+🔹テスト項目
+1. plus Btn@multiPlot
+2. plus Btn@SinglePlot
+3. Star Btn@SinglePlot
+4. LongPress@AllPlot
+
 📅2025/04/25Fr
 @FocusState var focusItem: Int?
 
@@ -18,7 +26,6 @@ TODO: コメントを厳選 Carefully select comments
 - ContentView.swift
   codes: [[String]], ["1711", "(株)ＳＤＳホールディングス", "東証STD", "時価総額2,190百万円", "【特色】省エネ施設の設計・施工で再建図る。太陽光発電事業は大型から自家消費型の施工販売へ転換", "建設業"]
   内側配列の要素数6
-  
   
 📅2025/04/10Th
 TODO:
