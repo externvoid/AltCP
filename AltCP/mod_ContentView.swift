@@ -228,14 +228,15 @@ struct TitleBarBtn2: ViewModifier {
                 .foregroundStyle(.red, .green)
             } else { Image(systemName: "m.square.fill") }
           }.disabled(env.typ == .mn)
-
-          Button { print("DWM candle selected"); env.typ = .all }
-          label: {
-            if env.typ == .all { Image(systemName: "star.square.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.yellow, .blue)
-            } else { Image(systemName: "star.square.fill") }
-          }.disabled(env.typ == .all)
+          if env.selection != nil {
+            Button { print("DWM candle selected"); env.typ = .all }
+            label: {
+              if env.typ == .all { Image(systemName: "star.square.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.yellow, .blue)
+              } else { Image(systemName: "star.square.fill") }
+            }.disabled(env.typ == .all)
+          }
         }
       } // toolbar
   }
@@ -290,7 +291,34 @@ struct TitleBarMnu2: ViewModifier {
                 Image(systemName: "3.circle.fill")
               }
             }
-          }
+            Divider()
+            Button(action: {
+              env.mode = .hist
+              print("hist tapped")
+            }) {
+              Text(String("Hist"))
+              if env.mode == .hist {
+                Image(systemName: "h.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.blue, .pink)
+              } else {
+                Image(systemName: "h.circle.fill")
+              }
+            }
+            Button(action: {
+              env.mode = .full
+              print("full tapped")
+            }) {
+              Text(String("Full"))
+              if env.mode == .full {
+                Image(systemName: "f.circle.fill")
+                  .symbolRenderingMode(.palette)
+                  .foregroundStyle(.blue, .pink)
+              } else {
+                Image(systemName: "f.circle.fill")
+              }
+            }
+          } // Menu
         } // toolbar
       }
   }

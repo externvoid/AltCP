@@ -8,8 +8,10 @@ class AppState: ObservableObject {
   @Published var titleBar: String = "browse history"
   @Published var codes: [[String]] = []
   @Published var selection: String? = nil
+  @Published var mode: Mode = .hist
   init() {
     do {
+      print("QuerryCodeTbl")
       codes = try Task.sync {
         try await Networker.queryCodeTbl(
           DBPath.dbPath(1), DBPath.dbPath(2))

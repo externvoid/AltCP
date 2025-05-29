@@ -30,14 +30,19 @@ struct ContentView: View {
         }
       }
     } // ScrollView
-    .modifier(TitleBarMnu(limit: $env.limit))
-    .modifier(TitleBarBtn(typ: $env.typ))
-//    .modifier(TitleBarMnu2())
-//    .modifier(TitleBarBtn2())
+    .modifier(TitleBarMnu2())
+    .modifier(TitleBarBtn2())
+    //    .modifier(TitleBarMnu(limit: $env.limit))
+    //    .modifier(TitleBarBtn(typ: $env.typ))
     .navigationTitle(env.titleBar)
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
+  // allCodesPlot
+  //        ForEach(env.codes, id: \.self) {e in
+  //          StockView(selection: .constant(e[0]), typ: env.typ)
+  //            .onLongPressGesture {
+  //              env.selection = e[0]
   private func singlePlot() -> some View {
     StockView(selection: $env.selection, typ: env.typ)
     //    StockView(selected: text, selection: $env.selection)

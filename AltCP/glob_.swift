@@ -1,6 +1,9 @@
 //  Created by Tanaka Hiroshi on 2024/10/01.
 import Foundation
 
+public enum Mode: Int { case hist = 0, full
+  var id: Int { rawValue } }
+
 extension Date {
   public static let formatter: DateFormatter = {
     let formatter = DateFormatter()
