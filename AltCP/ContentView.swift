@@ -13,7 +13,15 @@ struct ContentView: View {
     } else {
       let _ = print("\n <-- Start Plot\n")
       let _ = print("selStr: \(selStr), sels: \(sels.count)")
-      multiPlot()
+      switch env.mode {
+        case .hist: multiPlot()
+        case .full: fullCodesPlot()
+      }
+//      if env.mode == .hist {
+//        multiPlot()
+//      } else {
+//        fullCodesPlot()
+//      }
     }
   }
   //
@@ -38,11 +46,27 @@ struct ContentView: View {
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
-  // allCodesPlot
-  //        ForEach(env.codes, id: \.self) {e in
-  //          StockView(selection: .constant(e[0]), typ: env.typ)
-  //            .onLongPressGesture {
-  //              env.selection = e[0]
+  private func fullCodesPlot() -> some View {
+    ScrollView(.vertical) {
+      LazyVGrid(columns: columns, spacing: 10) {
+        ForEach(env.codes, id: \.self) {e in
+          StockView(selection: .constant(e[0]), typ: env.typ)
+            .onLongPressGesture {
+              env.selection = e[0]
+            }
+            .frame(height: CHARTWIDTH*0.75)
+            .padding(5)
+        }
+      }
+    }
+    .modifier(TitleBarMnu2())
+    .modifier(TitleBarBtn2())
+    //    .modifier(TitleBarMnu(limit: $env.limit))
+    //    .modifier(TitleBarBtn(typ: $env.typ))
+    .navigationTitle(env.titleBar)
+    .padding(.bottom, 4.5)
+    .padding([.top, .leading, .trailing], 3)
+  }
   private func singlePlot() -> some View {
     StockView(selection: $env.selection, typ: env.typ)
     //    StockView(selected: text, selection: $env.selection)

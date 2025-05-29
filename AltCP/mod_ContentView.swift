@@ -251,7 +251,7 @@ struct TitleBarMnu2: ViewModifier {
     content
       .toolbar { // toolbarTitleMenu
         ToolbarItem(placement: .primaryAction) {
-          Menu("Num") {
+          Menu("Menu") {
             Button(action: {
               env.limit = CANNUMSMA
               print("1 tapped")
@@ -291,7 +291,9 @@ struct TitleBarMnu2: ViewModifier {
                 Image(systemName: "3.circle.fill")
               }
             }
+
             Divider()
+
             Button(action: {
               env.mode = .hist
               print("hist tapped")
@@ -300,7 +302,7 @@ struct TitleBarMnu2: ViewModifier {
               if env.mode == .hist {
                 Image(systemName: "h.circle.fill")
                   .symbolRenderingMode(.palette)
-                  .foregroundStyle(.blue, .pink)
+                  .foregroundStyle(.indigo, .orange)
               } else {
                 Image(systemName: "h.circle.fill")
               }
@@ -313,7 +315,7 @@ struct TitleBarMnu2: ViewModifier {
               if env.mode == .full {
                 Image(systemName: "f.circle.fill")
                   .symbolRenderingMode(.palette)
-                  .foregroundStyle(.blue, .pink)
+                  .foregroundStyle(.indigo, .orange)
               } else {
                 Image(systemName: "f.circle.fill")
               }
