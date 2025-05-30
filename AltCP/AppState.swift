@@ -8,7 +8,7 @@ class AppState: ObservableObject {
   @Published var titleBar: String = "browse history"
   @Published var codes: [[String]] = []
   @Published var selection: String? = nil
-  @Published var mode: Mode = .hist
+  @Published var mode: Mode = .full
   init() {
     do {
       print("QuerryCodeTbl")

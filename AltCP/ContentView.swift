@@ -53,37 +53,51 @@ struct ContentView: View {
   // MARK: full Codes
   private func fullCodesPlot() -> some View {
     let chunkSize = 250
+    let visibleRange = 500 // 表示領域の前後に読み込むアイテム数
+
     return ScrollViewReader { proxy in
       ScrollView(.vertical) {
         LazyVGrid(columns: columns, spacing: 10) {
           ForEach(Array(stride(from: 0, to: env.codes.count, by: chunkSize)), id: \.self) { startIndex in
             let endIndex = min(startIndex + chunkSize, env.codes.count)
-            Section(content: {
-              ForEach(startIndex..<endIndex, id: \.self) { n in
-                StockView(selection: .constant(env.codes[n].first), typ: env.typ)
-                  .onLongPressGesture {
-                    env.selection = env.codes[n].first
-                  }
-                  .frame(height: CHARTWIDTH*0.75)
-                  .padding(5)
-                  .id(n)
-              }
-            })
+            // スクロール位置周辺のデータのみを初期表示
+            if abs(startIndex - (scrolledID ?? 0)) <= visibleRange {
+              Section(content: {
+                ForEach(startIndex..<endIndex, id: \.self) { n in
+                  StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+                    .onLongPressGesture {
+                      env.selection = env.codes[n].first
+                    }
+                    .frame(height: CHARTWIDTH*0.75)
+                    .padding(5)
+                    .id(n)
+                }
+              })
+            } else {
+              Color.clear
+                .frame(height: CGFloat(endIndex - startIndex) * (CHARTWIDTH*0.75 + 10))
+            }
           }
         }
         .scrollTargetLayout()
       } // ScrollView
-//    ScrollViewReader { proxy in
+//    let chunkSize = 250
+//    return ScrollViewReader { proxy in
 //      ScrollView(.vertical) {
 //        LazyVGrid(columns: columns, spacing: 10) {
-//          ForEach(0..<env.codes.endIndex, id: \.self) {n in
-//            StockView(selection: .constant(env.codes[n].first), typ: env.typ)
-//              .onLongPressGesture {
-//                env.selection = env.codes[n].first
+//          ForEach(Array(stride(from: 0, to: env.codes.count, by: chunkSize)), id: \.self) { startIndex in
+//            let endIndex = min(startIndex + chunkSize, env.codes.count)
+//            Section(content: {
+//              ForEach(startIndex..<endIndex, id: \.self) { n in
+//                StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+//                  .onLongPressGesture {
+//                    env.selection = env.codes[n].first
+//                  }
+//                  .frame(height: CHARTWIDTH*0.75)
+//                  .padding(5)
+//                  .id(n)
 //              }
-//              .frame(height: CHARTWIDTH*0.75)
-//              .padding(5)
-//              .id(n)
+//            })
 //          }
 //        }
 //        .scrollTargetLayout()
@@ -94,7 +108,10 @@ struct ContentView: View {
         print("@-# onChange@ScReader: \(String(describing: scrolledID)) ---")
       }
       .onAppear {
-        proxy.scrollTo(scrolledID, anchor: .top)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          proxy.scrollTo(scrolledID, anchor: .center)
+        }
+//        proxy.scrollTo(scrolledID, anchor: .top)
         print("@-@ onAppear@ScReader: \(String(describing: scrolledID)) ---")
       }
       .modifier(TitleBarMnu2())
@@ -109,6 +126,21 @@ struct ContentView: View {
       env.titleBar = "All Codes"
     }
   }
+  //    ScrollViewReader { proxy in
+  //      ScrollView(.vertical) {
+  //        LazyVGrid(columns: columns, spacing: 10) {
+  //          ForEach(0..<env.codes.endIndex, id: \.self) {n in
+  //            StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+  //              .onLongPressGesture {
+  //                env.selection = env.codes[n].first
+  //              }
+  //              .frame(height: CHARTWIDTH*0.75)
+  //              .padding(5)
+  //              .id(n)
+  //          }
+  //        }
+  //        .scrollTargetLayout()
+  //      } // ScrollView
   private func singlePlot() -> some View {
     StockView(selection: $env.selection, typ: env.typ)
     //    StockView(selected: text, selection: $env.selection)
