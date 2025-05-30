@@ -46,24 +46,48 @@ struct ContentView: View {
     .navigationTitle(env.titleBar)
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
+    .onAppear {
+      env.titleBar = "Browse History"
+    }
   }
   // MARK: full Codes
   private func fullCodesPlot() -> some View {
-    ScrollViewReader { proxy in
+    let chunkSize = 250
+    return ScrollViewReader { proxy in
       ScrollView(.vertical) {
         LazyVGrid(columns: columns, spacing: 10) {
-          ForEach(0..<env.codes.endIndex, id: \.self) {n in
-            StockView(selection: .constant(env.codes[n].first), typ: env.typ)
-              .onLongPressGesture {
-                env.selection = env.codes[n].first
+          ForEach(Array(stride(from: 0, to: env.codes.count, by: chunkSize)), id: \.self) { startIndex in
+            let endIndex = min(startIndex + chunkSize, env.codes.count)
+            Section(content: {
+              ForEach(startIndex..<endIndex, id: \.self) { n in
+                StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+                  .onLongPressGesture {
+                    env.selection = env.codes[n].first
+                  }
+                  .frame(height: CHARTWIDTH*0.75)
+                  .padding(5)
+                  .id(n)
               }
-              .frame(height: CHARTWIDTH*0.75)
-              .padding(5)
-              .id(n)
+            })
           }
         }
         .scrollTargetLayout()
       } // ScrollView
+//    ScrollViewReader { proxy in
+//      ScrollView(.vertical) {
+//        LazyVGrid(columns: columns, spacing: 10) {
+//          ForEach(0..<env.codes.endIndex, id: \.self) {n in
+//            StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+//              .onLongPressGesture {
+//                env.selection = env.codes[n].first
+//              }
+//              .frame(height: CHARTWIDTH*0.75)
+//              .padding(5)
+//              .id(n)
+//          }
+//        }
+//        .scrollTargetLayout()
+//      } // ScrollView
       .scrollIndicatorsFlash(onAppear: true)
       .scrollPosition(id: $scrolledID)
       .onChange(of: scrolledID) {
