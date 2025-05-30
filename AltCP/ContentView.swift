@@ -6,6 +6,7 @@ struct ContentView: View {
   @AppStorage("foo") var selStr: String = "0000,6952,9432,1301,130A"
   var sels: Queue<String> { str2Que(selStr) }
   @EnvironmentObject var env: AppState
+  @State var scrolledID: Int? = 0
   var body: some View {
     if let _ = env.selection {
       soloCodePlot()
@@ -46,26 +47,43 @@ struct ContentView: View {
     .padding(.bottom, 4.5)
     .padding([.top, .leading, .trailing], 3)
   }
+  // MARK: full Codes
   private func fullCodesPlot() -> some View {
-    ScrollView(.vertical) {
-      LazyVGrid(columns: columns, spacing: 10) {
-        ForEach(env.codes, id: \.self) {e in
-          StockView(selection: .constant(e[0]), typ: env.typ)
-            .onLongPressGesture {
-              env.selection = e[0]
-            }
-            .frame(height: CHARTWIDTH*0.75)
-            .padding(5)
+    ScrollViewReader { proxy in
+      ScrollView(.vertical) {
+        LazyVGrid(columns: columns, spacing: 10) {
+          ForEach(0..<env.codes.endIndex, id: \.self) {n in
+            StockView(selection: .constant(env.codes[n].first), typ: env.typ)
+              .onLongPressGesture {
+                env.selection = env.codes[n].first
+              }
+              .frame(height: CHARTWIDTH*0.75)
+              .padding(5)
+              .id(n)
+          }
         }
+        .scrollTargetLayout()
+      } // ScrollView
+      .scrollIndicatorsFlash(onAppear: true)
+      .scrollPosition(id: $scrolledID)
+      .onChange(of: scrolledID) {
+        print("@-# onChange@ScReader: \(String(describing: scrolledID)) ---")
       }
+      .onAppear {
+        proxy.scrollTo(scrolledID, anchor: .top)
+        print("@-@ onAppear@ScReader: \(String(describing: scrolledID)) ---")
+      }
+      .modifier(TitleBarMnu2())
+      .modifier(TitleBarBtn2())
+      //    .modifier(TitleBarMnu(limit: $env.limit))
+      //    .modifier(TitleBarBtn(typ: $env.typ))
+      .navigationTitle(env.titleBar)
+      .padding(.bottom, 4.5)
+      .padding([.top, .leading, .trailing], 3)
     }
-    .modifier(TitleBarMnu2())
-    .modifier(TitleBarBtn2())
-    //    .modifier(TitleBarMnu(limit: $env.limit))
-    //    .modifier(TitleBarBtn(typ: $env.typ))
-    .navigationTitle(env.titleBar)
-    .padding(.bottom, 4.5)
-    .padding([.top, .leading, .trailing], 3)
+    .onAppear {
+      env.titleBar = "All Codes"
+    }
   }
   private func singlePlot() -> some View {
     StockView(selection: $env.selection, typ: env.typ)
