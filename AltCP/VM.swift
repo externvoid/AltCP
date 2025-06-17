@@ -43,10 +43,11 @@ public class VM: ObservableObject {
     didSet {
       print("--- didSet ticker: \(ticker)---")
       Task {
-        if typ == .dy {
+        if typ == .dy && ticker != prevTicker{
           do {
             dy = try await Networker.queryHist(
               ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
+            prevTicker = ticker
           } catch {
             ticker = prevTicker
             print("Error at didSet ticker: \(error)")
