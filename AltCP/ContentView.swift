@@ -7,13 +7,16 @@ struct ContentView: View {
   var sels: Queue<String> { str2Que(selStr) }
   @EnvironmentObject var env: AppState
   @State var scrolledID: Int? = 0
+  init() {
+    print("\n <-- Start Plot\n")
+  }
   var body: some View {
     if let _ = env.selection {
       soloCodePlot()
 //      singlePlot(text)
     } else {
-      let _ = print("\n <-- Start Plot\n")
-      let _ = print("selStr: \(selStr), sels: \(sels.count)")
+//      let _ = print("\n <-- Start Plot\n")
+//      let _ = print("selStr: \(selStr), sels: \(sels.count)")
       switch env.mode {
         case .hist: multiPlot()
         case .full: fullCodesPlot()

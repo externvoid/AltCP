@@ -28,12 +28,17 @@ struct StockView: View {
   var items: [String] {
     txt.isEmpty ? allItems : Array(allItems.filter { $0.contains(txt) })
   }
+  @State var shouldIndicate: Bool = false
   // MARK: body
   var body: some View {
     GeometryReader { geometry in
       let fsize = geometry.frame(in: .local).size
       if !c.ar.isEmpty {
         chart(fsize: fsize) // MARK: plot
+      } else {
+        if shouldIndicate {
+          Text("Now loading...")
+        }
       }
     }  // geo
     .onTapGesture {
@@ -47,6 +52,9 @@ struct StockView: View {
     .onAppear {
 //      c.ticker = sels.ar.first!
       print("onAppear@GeometryReader: \(c.ticker): c.ar: \(c.ar.count)")
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.5)  {
+        shouldIndicate = true
+      }
     }
     .background(
       Color("chartBg").opacity(0.5), in: RoundedRectangle(cornerRadius: 5.0))
