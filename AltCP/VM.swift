@@ -43,7 +43,7 @@ public class VM: ObservableObject {
     didSet {
       print("--- didSet ticker: \(ticker)---")
       Task {
-        if typ == .dy && ticker != prevTicker{
+        if typ == .dy && ticker != prevTicker {
           do {
             dy = try await Networker.queryHist(
               ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
@@ -54,16 +54,18 @@ public class VM: ObservableObject {
           }
 //          ar = dy
           ar = Array(dy.suffix(limit))
-        } else if typ == .wk {
+        } else if typ == .wk && ticker != prevTicker {
           dy = try! await Networker.queryHist(
             ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           wk = convertToWeeklyData(from: dy)
           ar = Array(wk.suffix(limit))
-        } else if typ == .mn {
+          prevTicker = ticker
+        } else if typ == .mn && ticker != prevTicker {
           dy = try! await Networker.queryHist(
             ticker, DBPath.dbPath(0), DBPath.dbPath(2), -1)
           mn = convertToMonthlyData(from: dy)
           ar = Array(mn.suffix(limit))
+          prevTicker = ticker
         }
       }
     }

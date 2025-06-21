@@ -12,7 +12,7 @@ extension StockView {
         // 1
         Canvas { ctx, size in  // size: 描画エリア、ar: 正規化取引値(0 - 1.0)
           candlestick(ctx, size)
-          gridlines(ctx, size)
+          gridlinesNcodeInfo(ctx, size)
         }
         .frame(width: fsize.width, height: fsize.height * 3.0 / 4.0)
         // 2
@@ -124,13 +124,21 @@ extension StockView {
 
   // MARK: - draw 縦軸目盛り線キャプション+横線 & 銘柄コード、銘柄名、特徴
   // ticker2nameの実装が必要
-  func gridlines(_ ctx: GraphicsContext, _ size: CGSize) {
+  func gridlinesNcodeInfo(_ ctx: GraphicsContext, _ size: CGSize) {
     if c.ar.isEmpty { return }
     let h = size.height
     let rect = CGRect(origin: .zero, size: size)  // 描画エリア
     let mtx = CGAffineTransform(
       a: 1.0, b: 0.0, c: 0.0, d: -h / c.qheight, tx: 0.0, ty: h)
     let mt0 = CGAffineTransform.identity.translatedBy(x: 0, y: -c.min)
+
+    ctx.draw(
+      Text(findInfo(c.ticker).joined(separator: ": "))
+        .font(.system(size: 11.5))
+        .foregroundColor(.yellow.opacity(0.7))
+        , at: CGPoint(x: 0, y: 0), anchor: UnitPoint(x: -0.0, y: -0.1))
+//    .backgroundStyle(Color.black)
+
     var ps = Path()  // 横線(破線)
     c.yticks.forEach { e in
       ps.move(to: CGPoint(x: rect.minX, y: e))
@@ -146,10 +154,10 @@ extension StockView {
         Text(e.formatNumber).font(.system(size: 10.5)),
         at: CGPoint(x: rect.minX, y: y), anchor: UnitPoint(x: -0.0, y: -0.1))  //.bottomLeading)
     }
-    ctx.draw(
-      Text(findInfo(c.ticker).joined(separator: ": "))
-        .font(.system(size: 10.5)).foregroundColor(.yellow.opacity(0.6)),
-      at: CGPoint(x: 0, y: 0), anchor: UnitPoint(x: -0.0, y: -0.1))
+//    ctx.draw(
+//      Text(findInfo(c.ticker).joined(separator: ": "))
+//        .font(.system(size: 10.5)).foregroundColor(.yellow.opacity(0.6)),
+//      at: CGPoint(x: 0, y: 0), anchor: UnitPoint(x: -0.0, y: -0.1))
   }
   // MARK: - draw 日足 チャート座標系に描画してCanvas Viewの座標系へaffine transform
   func candlestick(_ ctx: GraphicsContext, _ size: CGSize) {
