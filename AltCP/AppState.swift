@@ -12,6 +12,7 @@ class AppState: ObservableObject {
   init() {
     do {
       print("QuerryCodeTbl")
+      Networker.initDB(DBPath.dbPath(1))
       codes = try Task.sync {
         try await Networker.queryCodeTbl(
           DBPath.dbPath(1), DBPath.dbPath(2))
